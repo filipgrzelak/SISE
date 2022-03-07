@@ -3,7 +3,7 @@ import java.io.FileReader;
 import java.io.IOException;
 
 public class FifteenPuzzle implements Cloneable {
-    private static int createdState = 0;
+    private static int createdState = 1;
     private int[][] board = new int[4][4];
     private int deepthLevel;
     private int currentState;
@@ -28,7 +28,6 @@ public class FifteenPuzzle implements Cloneable {
         }
         bf.close();
         deepthLevel = 0;
-        createdState++;
         this.currentState = createdState;
     }
 
@@ -158,9 +157,10 @@ public class FifteenPuzzle implements Cloneable {
     public FifteenPuzzle clone() {
         try {
             FifteenPuzzle clone = (FifteenPuzzle) super.clone();
+            clone.board = new int[4][4];
             for (int i = 0; i < 4; i++) {
                 for (int j = 0; j < 4; j++) {
-                    clone.getBoard()[i][j] = this.getBoard()[i][j];
+                    clone.board[i][j] = this.board[i][j];
                 }
             }
             return clone;

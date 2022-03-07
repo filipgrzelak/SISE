@@ -6,7 +6,7 @@ public class Main {
         System.out.println(fp.checkIfItIsASolution());
         printBoard(fp);
         BreadthFirstSearch bfs = new BreadthFirstSearch("C:\\SISE\\unsolvedGame");
-        System.out.println(bfs.breadthAlgorithm());
+        bfs.breadthAlgorithm();
     }
 
 
