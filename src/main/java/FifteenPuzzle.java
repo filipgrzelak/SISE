@@ -3,14 +3,16 @@ import java.io.FileReader;
 import java.io.IOException;
 
 public class FifteenPuzzle implements Cloneable {
+    private static int createdState = 0;
     private int[][] board = new int[4][4];
     private int deepthLevel;
-    private int createdState;
+    private int currentState;
 
     public FifteenPuzzle(FifteenPuzzle board) {
+        createdState++;
         this.board = board.getBoard();
         this.deepthLevel = board.getDeepthLevel() + 1;
-        this.createdState = board.getCreatedState() + 1;
+        this.currentState = createdState;
     }
 
     public FifteenPuzzle(String filename) throws IOException {
@@ -25,19 +27,22 @@ public class FifteenPuzzle implements Cloneable {
             counter++;
         }
         bf.close();
+        deepthLevel = 0;
+        createdState++;
+        this.currentState = createdState;
     }
 
     public boolean checkIfItIsASolution() {
         int counter = 1;
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
-                if (!(board[i][j] == counter)) {
+                if (i == 3 && j == 3) {
+                    return true;
+                }
+                if (board[i][j] != counter) {
                     return false;
                 }
                 counter++;
-                if (counter == 15) {
-                    counter = 0;
-                }
             }
         }
         return true;
@@ -80,6 +85,62 @@ public class FifteenPuzzle implements Cloneable {
         return returnIOrJValue("i") != 3;
     }
 
+    public FifteenPuzzle leftMoveChangePlaces() {
+        FifteenPuzzle board = this.clone();
+        if (this.leftMove()) {
+            int i = returnIOrJValue("i");
+            int j = returnIOrJValue("j");
+            int temp = board.getBoard()[i][j - 1];
+            board.getBoard()[i][j - 1] = 0;
+            board.getBoard()[i][j] = temp;
+            return board;
+        } else {
+            throw new IllegalArgumentException("Can not move left");
+        }
+    }
+
+    public FifteenPuzzle upMoveChangePlaces() {
+        FifteenPuzzle board = this.clone();
+        if (this.upMove()) {
+            int i = returnIOrJValue("i");
+            int j = returnIOrJValue("j");
+            int temp = board.getBoard()[i - 1][j];
+            board.getBoard()[i - 1][j] = 0;
+            board.getBoard()[i][j] = temp;
+            return board;
+        } else {
+            throw new IllegalArgumentException("Can not move up");
+        }
+    }
+
+    public FifteenPuzzle rightMoveChangePlaces() {
+        FifteenPuzzle board = this.clone();
+        if (this.rightMove()) {
+            int i = returnIOrJValue("i");
+            int j = returnIOrJValue("j");
+            int temp = board.getBoard()[i][j + 1];
+            board.getBoard()[i][j + 1] = 0;
+            board.getBoard()[i][j] = temp;
+            return board;
+        } else {
+            throw new IllegalArgumentException("Can not move right");
+        }
+    }
+
+    public FifteenPuzzle downMoveChangePlaces() {
+        FifteenPuzzle board = this.clone();
+        if (this.downMove()) {
+            int i = returnIOrJValue("i");
+            int j = returnIOrJValue("j");
+            int temp = board.getBoard()[i + 1][j];
+            board.getBoard()[i + 1][j] = 0;
+            board.getBoard()[i][j] = temp;
+            return board;
+        } else {
+            throw new IllegalArgumentException("Can not move down");
+        }
+    }
+
     public int[][] getBoard() {
         return board;
     }
@@ -88,7 +149,7 @@ public class FifteenPuzzle implements Cloneable {
         return deepthLevel;
     }
 
-    public int getCreatedState() {
+    public int getCurrentState() {
         return createdState;
     }
 
@@ -97,9 +158,19 @@ public class FifteenPuzzle implements Cloneable {
     public FifteenPuzzle clone() {
         try {
             FifteenPuzzle clone = (FifteenPuzzle) super.clone();
+            for (int i = 0; i < 4; i++) {
+                for (int j = 0; j < 4; j++) {
+                    clone.getBoard()[i][j] = this.getBoard()[i][j];
+                }
+            }
             return clone;
         } catch (CloneNotSupportedException e) {
             throw new AssertionError();
         }
+    }
+
+    @Override
+    public String toString() {
+        return "Current state:" + currentState + " depth level: " + deepthLevel;
     }
 }
