@@ -18,14 +18,30 @@ public class FifteenPuzzle {
         BufferedReader bf = new BufferedReader(new FileReader(filename));
         String line;
         int counter = 0;
-        while((line = bf.readLine()) != null) {
+        while ((line = bf.readLine()) != null) {
             String[] row = line.split(",");
-            for (int i = 0; i< row.length; i++) {
+            for (int i = 0; i < row.length; i++) {
                 board[counter][i] = Integer.parseInt(row[i]);
             }
             counter++;
         }
+        bf.close();
+    }
 
+    public boolean checkIfItIsSolution() {
+        int counter = 1;
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                if (!(board[i][j] == counter)) {
+                    return false;
+                }
+                counter++;
+                if (counter == 15) {
+                    counter = 0;
+                }
+            }
+        }
+        return true;
     }
 
     public int[][] getBoard() {

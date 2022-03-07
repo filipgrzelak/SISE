@@ -5,6 +5,7 @@ public class Main {
         System.out.println("Witaj Pawle :P");
         FifteenPuzzle board = new FifteenPuzzle("unsolvedGame");
         printBoard(board);
+
     }
 
     public static void printBoard(FifteenPuzzle board) {
