@@ -1,5 +1,6 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 
 public class FifteenPuzzle implements Cloneable {
@@ -152,6 +153,44 @@ public class FifteenPuzzle implements Cloneable {
         return createdState;
     }
 
+    public static void saveToFile(FifteenPuzzle board) throws IOException {
+        FileWriter fw = new FileWriter("wynik.txt");
+        fw.write(board.toString() + "\n");
+
+        String line = "";
+        for (int i = 0; i < 4; i++) {
+            line = "";
+            for (int j = 0; j < 4; j++) {
+                if (board.getBoard()[i][j] / 10 == 0) {
+                    line += board.getBoard()[i][j] + "  ";
+                } else {
+                    line += board.getBoard()[i][j] + " ";
+                }
+            }
+            fw.write(line + "\n");
+        }
+        fw.close();
+    }
+
+    public void doMoveOperation(String s) {
+        switch (s) {
+            case "L" -> {
+                leftMoveChangePlaces();
+            }
+            case "U" -> {
+                upMoveChangePlaces();
+            }
+            case "R" -> {
+                rightMoveChangePlaces();
+            }
+            case "D" -> {
+                downMoveChangePlaces();
+            }
+            default -> {
+                throw new IllegalArgumentException("Bad name of operation");
+            }
+        }
+    }
 
     @Override
     public FifteenPuzzle clone() {

@@ -2,11 +2,14 @@ import java.io.IOException;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-        FifteenPuzzle fp = new FifteenPuzzle("C:\\SISE\\unsolvedGame");
+        String filename = "C:\\SISE\\unsolvedGame";
+        FifteenPuzzle fp = new FifteenPuzzle(filename);
         System.out.println(fp.checkIfItIsASolution());
         printBoard(fp);
-        BreadthFirstSearch bfs = new BreadthFirstSearch("C:\\SISE\\unsolvedGame");
-        bfs.breadthAlgorithm();
+//        BreadthFirstSearch bfs = new BreadthFirstSearch(filename);
+//        bfs.breadthAlgorithm();
+        DepthFirstSearch dfs = new DepthFirstSearch(filename);
+        dfs.depthAlgorithm();
     }
 
 
