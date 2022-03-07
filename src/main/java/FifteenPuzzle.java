@@ -1,9 +1,8 @@
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
-public class FifteenPuzzle {
+public class FifteenPuzzle implements Cloneable {
     private int[][] board = new int[4][4];
     private int deepthLevel;
     private int createdState;
@@ -28,7 +27,7 @@ public class FifteenPuzzle {
         bf.close();
     }
 
-    public boolean checkIfItIsSolution() {
+    public boolean checkIfItIsASolution() {
         int counter = 1;
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
@@ -44,6 +43,26 @@ public class FifteenPuzzle {
         return true;
     }
 
+    public FifteenPuzzle leftMove() {
+        FifteenPuzzle board = null;
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                if (this.board[i][j] == 0) {
+                    if (j == 0) {
+                        throw new IllegalArgumentException("Can not go left");
+                    } else {
+                        board = this.clone();
+                        int temp = this.board[i][j - 1];
+                        this.board[i][j - 1] = temp;
+                        this.board[i][j] = 0;
+                    }
+                    
+                }
+            }
+        }
+        return board;
+    }
+
     public int[][] getBoard() {
         return board;
     }
@@ -54,5 +73,16 @@ public class FifteenPuzzle {
 
     public int getCreatedState() {
         return createdState;
+    }
+
+
+    @Override
+    public FifteenPuzzle clone() {
+        try {
+            FifteenPuzzle clone = (FifteenPuzzle) super.clone();
+            return clone;
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
     }
 }

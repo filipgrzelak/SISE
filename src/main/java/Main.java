@@ -2,7 +2,6 @@ import java.io.IOException;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-        System.out.println("Witaj Pawle :P");
         FifteenPuzzle board = new FifteenPuzzle("unsolvedGame");
         printBoard(board);
 
