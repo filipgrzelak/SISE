@@ -43,24 +43,41 @@ public class FifteenPuzzle implements Cloneable {
         return true;
     }
 
-    public FifteenPuzzle leftMove() {
-        FifteenPuzzle board = null;
+    private int returnIOrJValue(String choose) {
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
                 if (this.board[i][j] == 0) {
-                    if (j == 0) {
-                        throw new IllegalArgumentException("Can not go left");
-                    } else {
-                        board = this.clone();
-                        int temp = this.board[i][j - 1];
-                        this.board[i][j - 1] = temp;
-                        this.board[i][j] = 0;
+                    switch (choose) {
+                        case "i" -> {
+                            return i;
+                        }
+                        case "j" -> {
+                            return j;
+                        }
+                        default -> {
+                            throw new IllegalArgumentException("Wrong argument");
+                        }
                     }
-                    
                 }
             }
         }
-        return board;
+        return -1;
+    }
+
+    public boolean leftMove() {
+        return returnIOrJValue("j") != 0;
+    }
+
+    public boolean upMove() {
+        return returnIOrJValue("i") != 0;
+    }
+
+    public boolean rightMove() {
+        return returnIOrJValue("j") != 3;
+    }
+
+    public boolean downMove() {
+        return returnIOrJValue("i") != 3;
     }
 
     public int[][] getBoard() {
