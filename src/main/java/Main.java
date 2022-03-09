@@ -3,13 +3,10 @@ import java.io.IOException;
 public class Main {
     public static void main(String[] args) throws IOException {
         String filename = "C:\\SISE\\unsolvedGame";
-        FifteenPuzzle fp = new FifteenPuzzle(filename);
-        System.out.println(fp.checkIfItIsASolution());
-        printBoard(fp);
-//        BreadthFirstSearch bfs = new BreadthFirstSearch(filename);
-//        bfs.breadthAlgorithm();
-        DepthFirstSearch dfs = new DepthFirstSearch(filename);
-        dfs.depthAlgorithm();
+        BreadthFirstSearch bfs = new BreadthFirstSearch(filename,"RDLU");
+        bfs.breadthAlgorithm();
+//        DepthFirstSearch dfs = new DepthFirstSearch(filename,"RDLU");
+//        dfs.depthAlgorithm();
     }
 
 

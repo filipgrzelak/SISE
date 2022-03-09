@@ -1,0 +1,4 @@
+Time: 4.048ms
+Processed boards: 17
+Current state: 8 depth level: 3 moves: RRR
+Amount of moves: 3

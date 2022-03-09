@@ -1,13 +1,20 @@
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayDeque;
+import java.util.Arrays;
 import java.util.Deque;
 
 public class BreadthFirstSearch {
     private static Deque<FifteenPuzzle> states = new ArrayDeque<>();
+    private String[] moves = new String[4];
+    private long startTime;
+    private int amountOfProcessedBoards = 1;
 
-    public BreadthFirstSearch(String filename) throws IOException {
-
+    public BreadthFirstSearch(String filename,String moves) throws IOException {
+        startTime = System.nanoTime();
+        for (int i = 0; i < 4; i++) {
+            this.moves[i] = String.valueOf(moves.charAt(i));
+        }
         states.add(new FifteenPuzzle(filename));
     }
 
@@ -15,38 +22,20 @@ public class BreadthFirstSearch {
         FifteenPuzzle firstState = states.getFirst();
         states.removeFirst();
         if (firstState.checkIfItIsASolution()) {
-            System.out.println("wszedlem");
-            FifteenPuzzle.saveToFile(firstState);
+            FifteenPuzzle.saveToFile(firstState,System.nanoTime() - startTime,amountOfProcessedBoards);
             return;
         }
-        if(firstState.getDeepthLevel() < 20) {
+
+        for (int i = 0; i < 4; i++) {
             try {
-                states.add(new FifteenPuzzle(firstState.leftMoveChangePlaces()));
+                states.add(new FifteenPuzzle(firstState.doMoveOperation(moves[i])));
+                amountOfProcessedBoards++;
             } catch (Exception e) {
 
-            }
-
-            try {
-                states.add(new FifteenPuzzle(firstState.upMoveChangePlaces()));
-            } catch (Exception e) {
-
-            }
-
-            try {
-                states.add(new FifteenPuzzle(firstState.rightMoveChangePlaces()));
-            } catch (Exception e) {
-
-            }
-
-            try {
-                states.add(new FifteenPuzzle(firstState.downMoveChangePlaces()));
-            } catch (Exception e) {
             }
         }
 
-
         breadthAlgorithm();
-        return;
     }
 
 }
