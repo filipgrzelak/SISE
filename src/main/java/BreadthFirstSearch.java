@@ -10,7 +10,7 @@ public class BreadthFirstSearch {
     private long startTime;
     private int amountOfProcessedBoards = 1;
 
-    public BreadthFirstSearch(String filename,String moves) throws IOException {
+    public BreadthFirstSearch(String filename, String moves) throws IOException {
         startTime = System.nanoTime();
         for (int i = 0; i < 4; i++) {
             this.moves[i] = moves.charAt(i);
@@ -22,16 +22,15 @@ public class BreadthFirstSearch {
         FifteenPuzzle firstState = states.getFirst();
         states.removeFirst();
         if (firstState.checkIfItIsASolution()) {
-            FifteenPuzzle.saveToFile(firstState,System.nanoTime() - startTime,amountOfProcessedBoards);
+            FifteenPuzzle.saveToFile(firstState, System.nanoTime() - startTime, amountOfProcessedBoards);
             return;
         }
 
         for (int i = 0; i < 4; i++) {
-            try {
-                states.add(firstState.doMoveOperation(moves[i]));
+            int temp = states.size();
+            SwichClass.doMoveOperation(moves[i], firstState, states);
+            if (temp != states.size()) {
                 amountOfProcessedBoards++;
-            } catch (Exception e) {
-
             }
         }
 

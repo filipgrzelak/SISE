@@ -12,7 +12,6 @@ public class FifteenPuzzle implements Cloneable {
     private int currentState;
     private List<Character> allMovesList = new ArrayList<>();
     private char lastMove = ' ';
-    private String allMoves = "";
     private int x = 0;
     private int y = 0;
 
@@ -98,68 +97,8 @@ public class FifteenPuzzle implements Cloneable {
         fw.write("Time: " + Math.round(timeOfOperationInMiliSec / 1000.0) / 1000.0 + "ms\n");
         fw.write("Processed boards: " + processedBoards + "\n");
         fw.write(board.toString() + "\n");
-        fw.write("Amount of moves: " + board.getAllMoves().length() + "\n");
+        fw.write("Amount of moves: " + board.getAllMovesList().size() + "\n");
         fw.close();
-    }
-
-    public FifteenPuzzle doMoveOperation(char s) {
-        switch (s) {
-            case 'L':
-                if (x != 0 && (lastMove != 'R')) {
-                    FifteenPuzzle board = this.clone();
-                    int temp = board.getBoard()[y][x - 1];
-                    board.getBoard()[y][x - 1] = 0;
-                    board.getBoard()[y][x] = temp;
-                    board.allMovesList.add('L');
-                    board.lastMove = 'L';
-                    board.setX(x - 1);
-                    return board;
-                } else {
-                    throw new IllegalArgumentException("Can not move left");
-                }
-            case 'U':
-                if (y != 0 && (lastMove != 'D')) {
-                    FifteenPuzzle board = this.clone();
-                    int temp = board.getBoard()[y - 1][x];
-                    board.getBoard()[y - 1][x] = 0;
-                    board.getBoard()[y][x] = temp;
-                    board.allMovesList.add('U');
-                    board.lastMove = 'U';
-                    board.setY(y - 1);
-                    return board;
-                } else {
-                    throw new IllegalArgumentException("Can not move up");
-                }
-            case 'R':
-                if (x != 3 && (lastMove != 'L')) {
-                    FifteenPuzzle board = this.clone();
-                    int temp = board.getBoard()[y][x + 1];
-                    board.getBoard()[y][x + 1] = 0;
-                    board.getBoard()[y][x] = temp;
-                    board.allMovesList.add('R');
-                    board.lastMove = 'R';
-                    board.setX(x + 1);
-                    return board;
-                } else {
-                    throw new IllegalArgumentException("Can not move right");
-                }
-            case 'D':
-                if (y != 3 && (lastMove != 'U')) {
-                    FifteenPuzzle board = this.clone();
-                    int temp = board.getBoard()[y + 1][x];
-                    board.getBoard()[y + 1][x] = 0;
-                    board.getBoard()[y][x] = temp;
-                    board.allMovesList.add('D');
-                    board.lastMove = 'D';
-                    board.setY(y + 1);
-                    return board;
-                } else {
-                    throw new IllegalArgumentException("Can not move down");
-                }
-            default:
-                throw new IllegalArgumentException("Bad name of operation");
-
-        }
     }
 
     @Override
@@ -181,14 +120,6 @@ public class FifteenPuzzle implements Cloneable {
         } catch (CloneNotSupportedException e) {
             throw new AssertionError();
         }
-    }
-
-    public String getAllMoves() {
-        return allMoves;
-    }
-
-    public void setAllMoves(String allMoves) {
-        this.allMoves = allMoves;
     }
 
     @Override
