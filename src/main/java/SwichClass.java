@@ -1,4 +1,5 @@
 import java.util.Collection;
+import java.util.List;
 
 public class SwichClass {
     public static void doMoveOperation(char s, FifteenPuzzle state, Collection<FifteenPuzzle> list) {
@@ -12,6 +13,7 @@ public class SwichClass {
                     board.getAllMovesList().add('L');
                     board.setLastMove('L');
                     board.setX(board.getX() - 1);
+
                     list.add(board);
                 }
                 break;

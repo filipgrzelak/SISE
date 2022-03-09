@@ -3,12 +3,13 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class FifteenPuzzle implements Cloneable {
     private static int createdState = 1;
     private int[][] board = new int[4][4];
-    private int deepthLevel = 0;
+    private int depthLevel = 0;
     private int currentState;
     private List<Character> allMovesList = new ArrayList<>();
     private char lastMove = ' ';
@@ -70,8 +71,8 @@ public class FifteenPuzzle implements Cloneable {
         return board;
     }
 
-    public int getDeepthLevel() {
-        return deepthLevel;
+    public int getDepthLevel() {
+        return depthLevel;
     }
 
     public int getCurrentState() {
@@ -110,7 +111,7 @@ public class FifteenPuzzle implements Cloneable {
             clone.allMovesList.addAll(this.allMovesList);
             createdState++;
             clone.currentState = createdState;
-            clone.deepthLevel = this.getDeepthLevel() + 1;
+            clone.depthLevel = this.getDepthLevel() + 1;
             for (int i = 0; i < 4; i++) {
                 for (int j = 0; j < 4; j++) {
                     clone.board[i][j] = this.board[i][j];
@@ -123,7 +124,22 @@ public class FifteenPuzzle implements Cloneable {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        FifteenPuzzle that = (FifteenPuzzle) o;
+
+        return Arrays.deepEquals(board, that.board);
+    }
+
+    @Override
+    public int hashCode() {
+        return Arrays.deepHashCode(board);
+    }
+
+    @Override
     public String toString() {
-        return "Current state: " + currentState + " depth level: " + deepthLevel + " moves: " + allMovesList;
+        return "Current state: " + currentState + " depth level: " + depthLevel + " moves: " + allMovesList;
     }
 }

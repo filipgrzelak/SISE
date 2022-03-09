@@ -7,11 +7,10 @@ import java.util.Deque;
 public class BreadthFirstSearch {
     private static Deque<FifteenPuzzle> states = new ArrayDeque<>();
     private char[] moves = new char[4];
-    private long startTime;
+    private long startTime = System.nanoTime();
     private int amountOfProcessedBoards = 1;
 
     public BreadthFirstSearch(String filename, String moves) throws IOException {
-        startTime = System.nanoTime();
         for (int i = 0; i < 4; i++) {
             this.moves[i] = moves.charAt(i);
         }

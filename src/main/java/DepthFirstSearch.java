@@ -22,9 +22,8 @@ public class DepthFirstSearch {
             FifteenPuzzle.saveToFile(state, System.nanoTime() - startTime, amountOfProcessedBoards);
             return;
         }
-        if (state.getDeepthLevel() < 20) {
+        if (state.getDepthLevel() < 20) {
             for (int i = 3; i >= 0; i--) {
-
                 SwichClass.doMoveOperation(moves[i], state, stack);
 
             }

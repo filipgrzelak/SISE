@@ -4,12 +4,11 @@ public class Main {
     public static void main(String[] args) throws IOException {
         String filename1 = "C:\\SISE\\unsolvedGame";
         String filename2 = "C:\\SISE\\text.txt";
-        BreadthFirstSearch bfs = new BreadthFirstSearch(filename2,"RDLU");
-        bfs.breadthAlgorithm();
-//        DepthFirstSearch dfs = new DepthFirstSearch(filename1,"RDLU");
-//        dfs.depthAlgorithm();
+//        BreadthFirstSearch bfs = new BreadthFirstSearch(filename1,"UDLR");
+//        bfs.breadthAlgorithm();
+        DepthFirstSearch dfs = new DepthFirstSearch(filename1,"UDLR");
+        dfs.depthAlgorithm();
     }
-
 
 
     public static void printBoard(FifteenPuzzle board) {
