@@ -1,4 +1,4 @@
-Time: 77897.282ms
-Processed boards: 1990022
-Current state: 1990022 depth level: 17 moves: RDDLDLURRUULDRDDR
-Amount of moves: 17
+Time: 778.521ms
+Processed boards: 1
+Current state: 1990022 depth level: 17 moves: [R, D, D, L, D, L, U, R, R, U, U, L, D, R, D, D, R]
+Amount of moves: 0

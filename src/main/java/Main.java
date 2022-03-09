@@ -2,11 +2,12 @@ import java.io.IOException;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-        String filename = "C:\\SISE\\unsolvedGame";
-        BreadthFirstSearch bfs = new BreadthFirstSearch(filename,"RDLU");
-        bfs.breadthAlgorithm();
-//        DepthFirstSearch dfs = new DepthFirstSearch(filename,"RDLU");
-//        dfs.depthAlgorithm();
+        String filename1 = "C:\\SISE\\unsolvedGame";
+        String filename2 = "C:\\SISE\\text.txt";
+//        BreadthFirstSearch bfs = new BreadthFirstSearch(filename2,"RDLU");
+//        bfs.breadthAlgorithm();
+        DepthFirstSearch dfs = new DepthFirstSearch(filename1,"RDLU");
+        dfs.depthAlgorithm();
     }
 
 

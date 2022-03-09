@@ -2,26 +2,19 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class FifteenPuzzle implements Cloneable {
     private static int createdState = 1;
     private int[][] board = new int[4][4];
     private int deepthLevel = 0;
     private int currentState;
+    private List<Character> allMovesList = new ArrayList<>();
+    private char lastMove = ' ';
     private String allMoves = "";
     private int x = 0;
     private int y = 0;
-
-    public FifteenPuzzle(FifteenPuzzle board) {
-        createdState++;
-        this.board = board.getBoard();
-        this.deepthLevel = board.getDeepthLevel() + 1;
-        this.currentState = createdState;
-
-        this.allMoves = board.getAllMoves();
-        this.x = board.getX();
-        this.y = board.getY();
-    }
 
     public FifteenPuzzle(String filename) throws IOException {
         BufferedReader bf = new BufferedReader(new FileReader(filename));
@@ -31,13 +24,15 @@ public class FifteenPuzzle implements Cloneable {
             String[] row = line.split(",");
             for (int i = 0; i < row.length; i++) {
                 board[counter][i] = Integer.parseInt(row[i]);
+                if (board[counter][i] == 0) {
+                    y = counter;
+                    x = i;
+                }
             }
             counter++;
         }
         bf.close();
         this.currentState = createdState;
-        y = returnIOrJValue("i");
-        x = returnIOrJValue("j");
     }
 
     public boolean checkIfItIsASolution() {
@@ -54,27 +49,6 @@ public class FifteenPuzzle implements Cloneable {
             }
         }
         return true;
-    }
-
-    private int returnIOrJValue(String choose) {
-        for (int i = 0; i < 4; i++) {
-            for (int j = 0; j < 4; j++) {
-                if (this.board[i][j] == 0) {
-                    switch (choose) {
-                        case "i" -> {
-                            return i;
-                        }
-                        case "j" -> {
-                            return j;
-                        }
-                        default -> {
-                            throw new IllegalArgumentException("Wrong argument");
-                        }
-                    }
-                }
-            }
-        }
-        return -1;
     }
 
     public int getX() {
@@ -105,6 +79,20 @@ public class FifteenPuzzle implements Cloneable {
         return createdState;
     }
 
+    public List<Character> getAllMovesList() {
+        return allMovesList;
+    }
+
+
+
+    public char getLastMove() {
+        return lastMove;
+    }
+
+    public void setLastMove(char lastMove) {
+        this.lastMove = lastMove;
+    }
+
     public static void saveToFile(FifteenPuzzle board, long timeOfOperationInMiliSec, int processedBoards) throws IOException {
         FileWriter fw = new FileWriter("wynik.txt");
         fw.write("Time: " + Math.round(timeOfOperationInMiliSec / 1000.0) / 1000.0 + "ms\n");
@@ -114,51 +102,55 @@ public class FifteenPuzzle implements Cloneable {
         fw.close();
     }
 
-    public FifteenPuzzle doMoveOperation(String s) {
+    public FifteenPuzzle doMoveOperation(char s) {
         switch (s) {
-            case "L":
-                if (x != 0 && !allMoves.endsWith("R")) {
+            case 'L':
+                if (x != 0 && (lastMove != 'R')) {
                     FifteenPuzzle board = this.clone();
                     int temp = board.getBoard()[y][x - 1];
                     board.getBoard()[y][x - 1] = 0;
                     board.getBoard()[y][x] = temp;
-                    board.setAllMoves(allMoves + "L");
+                    board.allMovesList.add('L');
+                    board.lastMove = 'L';
                     board.setX(x - 1);
                     return board;
                 } else {
                     throw new IllegalArgumentException("Can not move left");
                 }
-            case "U":
-                if (y != 0 && !allMoves.endsWith("D")) {
+            case 'U':
+                if (y != 0 && (lastMove != 'D')) {
                     FifteenPuzzle board = this.clone();
                     int temp = board.getBoard()[y - 1][x];
                     board.getBoard()[y - 1][x] = 0;
                     board.getBoard()[y][x] = temp;
-                    board.setAllMoves(allMoves + "U");
+                    board.allMovesList.add('U');
+                    board.lastMove = 'U';
                     board.setY(y - 1);
                     return board;
                 } else {
                     throw new IllegalArgumentException("Can not move up");
                 }
-            case "R":
-                if (x != 3 && !allMoves.endsWith("L")) {
+            case 'R':
+                if (x != 3 && (lastMove != 'L')) {
                     FifteenPuzzle board = this.clone();
                     int temp = board.getBoard()[y][x + 1];
                     board.getBoard()[y][x + 1] = 0;
                     board.getBoard()[y][x] = temp;
-                    board.setAllMoves(allMoves + "R");
+                    board.allMovesList.add('R');
+                    board.lastMove = 'R';
                     board.setX(x + 1);
                     return board;
                 } else {
                     throw new IllegalArgumentException("Can not move right");
                 }
-            case "D":
-                if (y != 3 && !allMoves.endsWith("U")) {
+            case 'D':
+                if (y != 3 && (lastMove != 'U')) {
                     FifteenPuzzle board = this.clone();
                     int temp = board.getBoard()[y + 1][x];
                     board.getBoard()[y + 1][x] = 0;
                     board.getBoard()[y][x] = temp;
-                    board.setAllMoves(allMoves + "D");
+                    board.allMovesList.add('D');
+                    board.lastMove = 'D';
                     board.setY(y + 1);
                     return board;
                 } else {
@@ -175,6 +167,11 @@ public class FifteenPuzzle implements Cloneable {
         try {
             FifteenPuzzle clone = (FifteenPuzzle) super.clone();
             clone.board = new int[4][4];
+            clone.allMovesList = new ArrayList<>();
+            clone.allMovesList.addAll(this.allMovesList);
+            createdState++;
+            clone.currentState = createdState;
+            clone.deepthLevel = this.getDeepthLevel() + 1;
             for (int i = 0; i < 4; i++) {
                 for (int j = 0; j < 4; j++) {
                     clone.board[i][j] = this.board[i][j];
@@ -196,6 +193,6 @@ public class FifteenPuzzle implements Cloneable {
 
     @Override
     public String toString() {
-        return "Current state: " + currentState + " depth level: " + deepthLevel + " moves: " + allMoves;
+        return "Current state: " + currentState + " depth level: " + deepthLevel + " moves: " + allMovesList;
     }
 }
