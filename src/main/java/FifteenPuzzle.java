@@ -6,27 +6,29 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static java.lang.Math.abs;
+
 public class FifteenPuzzle implements Cloneable {
     private static int createdState = 1;
-    private int[][] board = new int[4][4];
-    private int depthLevel = 0;
+    private byte[][] board = new byte[4][4];
+    private byte depthLevel = 0;
     private int currentState;
     private List<Character> allMovesList = new ArrayList<>();
     private char lastMove = ' ';
-    private int x = 0;
-    private int y = 0;
+    private byte x = 0;
+    private byte y = 0;
 
     public FifteenPuzzle(String filename) throws IOException {
         BufferedReader bf = new BufferedReader(new FileReader(filename));
         String line;
-        int counter = 0;
+        byte counter = 0;
         while ((line = bf.readLine()) != null) {
             String[] row = line.split(",");
             for (int i = 0; i < row.length; i++) {
-                board[counter][i] = Integer.parseInt(row[i]);
+                board[counter][i] = Byte.parseByte(row[i]);
                 if (board[counter][i] == 0) {
                     y = counter;
-                    x = i;
+                    x = (byte) i;
                 }
             }
             counter++;
@@ -55,7 +57,7 @@ public class FifteenPuzzle implements Cloneable {
         return x;
     }
 
-    public void setX(int x) {
+    public void setX(byte x) {
         this.x = x;
     }
 
@@ -63,12 +65,12 @@ public class FifteenPuzzle implements Cloneable {
         return y;
     }
 
-    public void setY(int y) {
+    public void setY(byte y) {
         this.y = y;
     }
 
-    public int[][] getBoard() {
-        return board;
+    public byte[][] getBoard() {
+        return this.board;
     }
 
     public int getDepthLevel() {
@@ -82,7 +84,6 @@ public class FifteenPuzzle implements Cloneable {
     public List<Character> getAllMovesList() {
         return allMovesList;
     }
-
 
 
     public char getLastMove() {
@@ -106,12 +107,12 @@ public class FifteenPuzzle implements Cloneable {
     public FifteenPuzzle clone() {
         try {
             FifteenPuzzle clone = (FifteenPuzzle) super.clone();
-            clone.board = new int[4][4];
+            clone.board = new byte[4][4];
             clone.allMovesList = new ArrayList<>();
             clone.allMovesList.addAll(this.allMovesList);
             createdState++;
             clone.currentState = createdState;
-            clone.depthLevel = this.getDepthLevel() + 1;
+            clone.depthLevel = (byte) (this.getDepthLevel() + 1);
             for (int i = 0; i < 4; i++) {
                 for (int j = 0; j < 4; j++) {
                     clone.board[i][j] = this.board[i][j];
@@ -121,6 +122,22 @@ public class FifteenPuzzle implements Cloneable {
         } catch (CloneNotSupportedException e) {
             throw new AssertionError();
         }
+    }
+
+    public int countDistance() {
+        int distance = 0;
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                if (board[i][j] == 0) {
+                    distance += abs(3 - i) + abs(3 - j);
+                } else if (board[i][j] % 4 == 0) {
+                    distance += abs((board[i][j] / 4) - i - 1) + 3 - j;
+                } else {
+                    distance += abs((board[i][j] / 4) - i) + abs((board[i][j] % 4 - 1) - j);
+                }
+            }
+        }
+        return distance;
     }
 
     @Override
