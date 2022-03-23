@@ -39,9 +39,9 @@ public class FifteenPuzzle implements Cloneable {
 
     public boolean checkIfItIsASolution() {
         int counter = 1;
-        for (int i = 0; i < 4; i++) {
-            for (int j = 0; j < 4; j++) {
-                if (i == 3 && j == 3) {
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[i].length; j++) {
+                if (i == board.length - 1 && j == board[i].length - 1) {
                     return true;
                 }
                 if (board[i][j] != counter) {
@@ -126,18 +126,47 @@ public class FifteenPuzzle implements Cloneable {
 
     public int countDistance() {
         int distance = 0;
-        for (int i = 0; i < 4; i++) {
-            for (int j = 0; j < 4; j++) {
+        int value = 1;
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[i].length; j++) {
                 if (board[i][j] == 0) {
-                    distance += abs(3 - i) + abs(3 - j);
-                } else if (board[i][j] % 4 == 0) {
-                    distance += abs((board[i][j] / 4) - i - 1) + 3 - j;
-                } else {
-                    distance += abs((board[i][j] / 4) - i) + abs((board[i][j] % 4 - 1) - j);
+                    if (i != board.length - 1 && j != board[i].length - 1) {
+                        distance += abs((board[i].length - 1) - i) + abs((board[i].length - 1) - j);
+                    }
+                    value++;
+                    continue;
                 }
+                if (board[i][j] != value) {
+                    if(board[i][j]%board[i].length == 0) {
+                        distance += abs((board[i][j] / (board[i].length + 1) - i)) + abs(((board[i][j] % board[i].length) - 1) - j);
+                    } else {
+                        distance += abs((board[i][j] / (board[i].length) - i)) + abs(((board[i][j] % board[i].length) - 1) - j);
+                    }
+                }
+                value++;
             }
         }
         return distance;
+    }
+
+    public int countWrongPlaces() {
+        int wrong = 0;
+        int value = 1;
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[i].length; j++) {
+                if ((board.length - 1) == i && (board[i].length - 1) == j) {
+                    if (board[i][j] != 0) {
+                        wrong++;
+                    }
+                    break;
+                }
+                if (board[i][j] != value) {
+                    wrong++;
+                }
+                value++;
+            }
+        }
+        return wrong;
     }
 
     @Override
