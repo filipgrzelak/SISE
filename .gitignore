@@ -3,4 +3,8 @@
 /src/main/java/Main.class
 /src/main/java/FifteenPuzzle.class
 /src/main/java/BreadthFirstSearch.class
-/.class
+/src/main/java/DepthFirstSearch.class
+/src/main/java/SwichClass.class
+/src/main/java/Hamming.class
+/src/main/java/Manhattan.class
+/src/main/java/Saving.class
