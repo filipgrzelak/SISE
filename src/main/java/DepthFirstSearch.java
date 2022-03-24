@@ -5,32 +5,47 @@ public class DepthFirstSearch {
     private Stack<FifteenPuzzle> stack = new Stack<>();
     private char[] moves = new char[4];
     private long startTime = System.nanoTime();
-    private int distance = 0;
     private int amountOfProcessedBoards = 0;
+    private int visitedBoards = 0;
+    private int maxRecursionLevel = 0;
     private List<Integer> hashes = new ArrayList<>();
+    private String fileStats;
+    private String fileSol;
 
-    public DepthFirstSearch(String filename, String moves) throws IOException {
+    public DepthFirstSearch(String filename, String moves, String fileSol, String fileStats) throws IOException {
+        this.fileSol = fileSol;
+        this.fileStats = fileStats;
         for (int i = 0; i < 4; i++) {
             this.moves[i] = moves.charAt(i);
         }
         FifteenPuzzle fifteenPuzzle = new FifteenPuzzle(filename);
-        distance = fifteenPuzzle.countDistance();
         stack.add(fifteenPuzzle);
     }
 
     public void depthAlgorithm() throws IOException {
-        FifteenPuzzle state = stack.pop();
-        amountOfProcessedBoards++;
-        if (state.checkIfItIsASolution()) {
-            FifteenPuzzle.saveToFile(state, System.nanoTime() - startTime, amountOfProcessedBoards);
-            return;
-        }
-        if (state.getDepthLevel() < 50) {
-            for (int i = 3; i >= 0; i--) {
-                SwichClass.doMoveOperation(moves[i], state, stack, distance);
+        while (!stack.isEmpty()) {
+            FifteenPuzzle state = stack.pop();
+            visitedBoards++;
+            if (state.getDepthLevel() > maxRecursionLevel && state.getDepthLevel() < 21) {
+                maxRecursionLevel = state.getDepthLevel();
+            }
+            if (state.checkIfItIsASolution()) {
+                Saving.saveToFile(state, System.nanoTime() - startTime, amountOfProcessedBoards, fileSol, fileStats, visitedBoards, maxRecursionLevel);
+                return;
+            }
+            if (state.getDepthLevel() < 21) {
+
+                for (int i = 3; i >= 0; i--) {
+                    int temp = stack.size();
+                    SwichClass.doMoveOperation(moves[i], state, stack);
+                    if (temp != stack.size()) {
+                        amountOfProcessedBoards++;
+                    }
+                }
             }
         }
-        depthAlgorithm();
+        Saving.saveNoSolution(fileSol);
+
     }
 
 

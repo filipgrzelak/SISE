@@ -1,4 +1,4 @@
-Time: 2.16ms
-Processed boards: 5
-Current state: 6 depth level: 3 moves: [R, R, R]
-Amount of moves: 3
+Time: 3.441ms
+Processed boards: 14
+Current state: 14 depth level: 5 moves: [D, D, D, R, R]
+Amount of moves: 5

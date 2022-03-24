@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -62,7 +63,7 @@ public class SwichClass {
         }
     }
 
-    public static void doMoveOperation(char s, FifteenPuzzle state, Collection<FifteenPuzzle> list, List<Integer> hashes, int distance) {
+    public static void doMoveOperation(char s, FifteenPuzzle state, ArrayList<FifteenPuzzle> list) {
         switch (s) {
             case 'L':
                 if (state.getX() != 0 && (state.getLastMove() != 'R')) {
@@ -73,9 +74,11 @@ public class SwichClass {
                     board.getAllMovesList().add('L');
                     board.setLastMove('L');
                     board.setX((byte) (board.getX() - 1));
-                    if (!hashes.contains(board.hashCode()) && board.countDistance() < (distance + 3)) {
-                        hashes.add(board.hashCode());
+                    int place = findTheRightPositionMan(board, list);
+                    if(place == -1 || place == 0) {
                         list.add(board);
+                    } else {
+                        list.add(place, board);
                     }
                 }
                 break;
@@ -88,11 +91,12 @@ public class SwichClass {
                     board.getAllMovesList().add('U');
                     board.setLastMove('U');
                     board.setY((byte) (board.getY() - 1));
-                    if (!hashes.contains(board.hashCode()) && board.countDistance() < (distance + 3)) {
-                        hashes.add(board.hashCode());
+                    int place = findTheRightPositionMan(board, list);
+                    if(place == -1 || place == 0) {
                         list.add(board);
+                    } else {
+                        list.add(place, board);
                     }
-
                 }
                 break;
             case 'R':
@@ -104,9 +108,11 @@ public class SwichClass {
                     board.getAllMovesList().add('R');
                     board.setLastMove('R');
                     board.setX((byte) (board.getX() + 1));
-                    if (!hashes.contains(board.hashCode()) && board.countDistance() < (distance + 3)) {
-                        hashes.add(board.hashCode());
+                    int place = findTheRightPositionMan(board, list);
+                    if(place == -1 || place == 0) {
                         list.add(board);
+                    } else {
+                        list.add(place, board);
                     }
                 }
                 break;
@@ -119,9 +125,11 @@ public class SwichClass {
                     board.getAllMovesList().add('D');
                     board.setLastMove('D');
                     board.setY((byte) (state.getY() + 1));
-                    if (!hashes.contains(board.hashCode()) && board.countDistance() < (distance + 3)) {
-                        hashes.add(board.hashCode());
+                    int place = findTheRightPositionMan(board, list);
+                    if(place == -1 || place == 0) {
                         list.add(board);
+                    } else {
+                        list.add(place, board);
                     }
                 }
                 break;
@@ -131,7 +139,7 @@ public class SwichClass {
         }
     }
 
-    public static void doMoveOperation(char s, FifteenPuzzle state, Collection<FifteenPuzzle> list, int distance) {
+    public static void doMoveOperationHam(char s, FifteenPuzzle state, ArrayList<FifteenPuzzle> list) {
         switch (s) {
             case 'L':
                 if (state.getX() != 0 && (state.getLastMove() != 'R')) {
@@ -142,8 +150,11 @@ public class SwichClass {
                     board.getAllMovesList().add('L');
                     board.setLastMove('L');
                     board.setX((byte) (board.getX() - 1));
-                    if (board.countDistance() < distance) {
+                    int place = findTheRightPositionHam(board, list);
+                    if(place == -1 || place == 0) {
                         list.add(board);
+                    } else {
+                        list.add(place, board);
                     }
                 }
                 break;
@@ -156,10 +167,12 @@ public class SwichClass {
                     board.getAllMovesList().add('U');
                     board.setLastMove('U');
                     board.setY((byte) (board.getY() - 1));
-                    if (board.countDistance() < distance) {
+                    int place = findTheRightPositionHam(board, list);
+                    if(place == -1 || place == 0) {
                         list.add(board);
+                    } else {
+                        list.add(place, board);
                     }
-
                 }
                 break;
             case 'R':
@@ -171,8 +184,11 @@ public class SwichClass {
                     board.getAllMovesList().add('R');
                     board.setLastMove('R');
                     board.setX((byte) (board.getX() + 1));
-                    if (board.countDistance() < distance) {
+                    int place = findTheRightPositionHam(board, list);
+                    if(place == -1 || place == 0) {
                         list.add(board);
+                    } else {
+                        list.add(place, board);
                     }
                 }
                 break;
@@ -185,14 +201,40 @@ public class SwichClass {
                     board.getAllMovesList().add('D');
                     board.setLastMove('D');
                     board.setY((byte) (state.getY() + 1));
-                    if (board.countDistance() < distance) {
+                    int place = findTheRightPositionHam(board, list);
+                    if(place == -1 || place == 0) {
                         list.add(board);
+                    } else {
+                        list.add(place, board);
                     }
                 }
                 break;
             default:
                 throw new IllegalArgumentException("Bad name of operation");
-
         }
+    }
+
+    private static int findTheRightPositionMan(FifteenPuzzle board, ArrayList<FifteenPuzzle> list) {
+        if (list.isEmpty()) {
+            return 0;
+        }
+        for (int i = 0; i < list.size(); i++) {
+            if (board.countDistance() <= list.get(i).countDistance()) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    private static int findTheRightPositionHam(FifteenPuzzle board, ArrayList<FifteenPuzzle> list) {
+        if (list.isEmpty()) {
+            return 0;
+        }
+        for (int i = 0; i < list.size(); i++) {
+            if (board.countWrongPlaces() <= list.get(i).countWrongPlaces()) {
+                return i;
+            }
+        }
+        return -1;
     }
 }

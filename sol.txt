@@ -1,0 +1,2 @@
+20
+[L, L, L, U, R, D, L, U, R, D, L, U, R, D, R, U, R, D, D, D]

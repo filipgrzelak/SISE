@@ -7,38 +7,47 @@ public class BreadthFirstSearch {
     private char[] moves = new char[4];
     private long startTime = System.nanoTime();
     private int amountOfProcessedBoards = 1;
+    private int visitedBoards = 0;
+    private int maxRecursionLevel = 0;
     private List<Integer> hashes = new ArrayList<>();
-    private int distance = 0;
+    private String fileStats;
+    private String fileSol;
 
-    public BreadthFirstSearch(String filename, String moves) throws IOException {
+    public BreadthFirstSearch(String filename, String moves, String fileSol, String fileStats) throws IOException {
+        this.fileSol = fileSol;
+        this.fileStats = fileStats;
         for (int i = 0; i < 4; i++) {
             this.moves[i] = moves.charAt(i);
         }
         FifteenPuzzle fifteenPuzzle = new FifteenPuzzle(filename);
-        distance = fifteenPuzzle.countDistance();
         states.add(fifteenPuzzle);
     }
 
     public void breadthAlgorithm() throws IOException {
-        FifteenPuzzle firstState = states.getFirst();
-        states.removeFirst();
-        if(firstState.getCurrentState()%10000 ==0) {
-            distance -= 1;
-        }
-        if (firstState.checkIfItIsASolution()) {
-            FifteenPuzzle.saveToFile(firstState, System.nanoTime() - startTime, amountOfProcessedBoards);
-            return;
-        }
+        while (!states.isEmpty()) {
+            FifteenPuzzle firstState = states.getFirst();
+            visitedBoards++;
+            states.removeFirst();
+            if (firstState.getDepthLevel() > maxRecursionLevel && firstState.getDepthLevel() < 21) {
+                maxRecursionLevel = firstState.getDepthLevel();
+            }
 
-        for (int i = 0; i < 4; i++) {
-            int temp = states.size();
-            SwichClass.doMoveOperation(moves[i], firstState, states, distance);
-            if (temp != states.size()) {
-                amountOfProcessedBoards++;
+            if (firstState.checkIfItIsASolution()) {
+                Saving.saveToFile(firstState, System.nanoTime() - startTime, amountOfProcessedBoards, fileSol, fileStats, visitedBoards, maxRecursionLevel);
+                return;
+            }
+            if(firstState.getDepthLevel() < 21) {
+                for (int i = 0; i < 4; i++) {
+                    int temp = states.size();
+                    SwichClass.doMoveOperation(moves[i], firstState, states);
+                    if (temp != states.size()) {
+                        amountOfProcessedBoards++;
+                    }
+                }
             }
         }
 
-        breadthAlgorithm();
+        Saving.saveNoSolution(fileSol);
     }
 
 }
