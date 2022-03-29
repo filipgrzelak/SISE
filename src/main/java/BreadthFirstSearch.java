@@ -28,7 +28,7 @@ public class BreadthFirstSearch {
             FifteenPuzzle firstState = states.getFirst();
             visitedBoards++;
             states.removeFirst();
-            if (firstState.getDepthLevel() > maxRecursionLevel && firstState.getDepthLevel() < 21) {
+            if (firstState.getDepthLevel() > maxRecursionLevel) {
                 maxRecursionLevel = firstState.getDepthLevel();
             }
 
@@ -36,7 +36,7 @@ public class BreadthFirstSearch {
                 Saving.saveToFile(firstState, System.nanoTime() - startTime, amountOfProcessedBoards, fileSol, fileStats, visitedBoards, maxRecursionLevel);
                 return;
             }
-            if(firstState.getDepthLevel() < 21) {
+            if(firstState.getDepthLevel() < 20) {
                 for (int i = 0; i < 4; i++) {
                     int temp = states.size();
                     SwichClass.doMoveOperation(moves[i], firstState, states);

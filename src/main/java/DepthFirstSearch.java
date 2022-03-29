@@ -26,14 +26,14 @@ public class DepthFirstSearch {
         while (!stack.isEmpty()) {
             FifteenPuzzle state = stack.pop();
             visitedBoards++;
-            if (state.getDepthLevel() > maxRecursionLevel && state.getDepthLevel() < 21) {
+            if (state.getDepthLevel() > maxRecursionLevel) {
                 maxRecursionLevel = state.getDepthLevel();
             }
             if (state.checkIfItIsASolution()) {
                 Saving.saveToFile(state, System.nanoTime() - startTime, amountOfProcessedBoards, fileSol, fileStats, visitedBoards, maxRecursionLevel);
                 return;
             }
-            if (state.getDepthLevel() < 21) {
+            if (state.getDepthLevel() < 20) {
 
                 for (int i = 3; i >= 0; i--) {
                     int temp = stack.size();

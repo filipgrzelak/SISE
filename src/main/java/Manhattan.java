@@ -27,7 +27,7 @@ public class Manhattan {
             FifteenPuzzle firstState = states.get(0);
             visitedBoards++;
             states.remove(0);
-            if (firstState.getDepthLevel() > maxRecursionLevel && firstState.getDepthLevel() < 21) {
+            if (firstState.getDepthLevel() > maxRecursionLevel) {
                 maxRecursionLevel = firstState.getDepthLevel();
             }
             if (firstState.checkIfItIsASolution()) {
@@ -35,7 +35,7 @@ public class Manhattan {
                 return;
             }
 
-            if (firstState.getDepthLevel() < 21) {
+            if (firstState.getDepthLevel() < 20) {
                 for (int i = 0; i < 4; i++) {
                     int temp = states.size();
                     SwichClass.doMoveOperation(moves[i], firstState, states);

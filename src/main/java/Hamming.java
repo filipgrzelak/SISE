@@ -24,7 +24,7 @@ public class Hamming {
             visitedBoards++;
             states.remove(0);
 
-            if (firstState.getDepthLevel() > maxRecursionLevel && firstState.getDepthLevel() < 21) {
+            if (firstState.getDepthLevel() > maxRecursionLevel) {
                 maxRecursionLevel = firstState.getDepthLevel();
             }
 
@@ -33,7 +33,7 @@ public class Hamming {
                 return;
             }
 
-            if (firstState.getDepthLevel() < 21) {
+            if (firstState.getDepthLevel() < 20) {
                 for (int i = 0; i < 4; i++) {
                     int temp = states.size();
                     SwichClass.doMoveOperationHam(moves[i], firstState, states);
