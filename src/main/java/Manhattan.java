@@ -7,7 +7,7 @@ public class Manhattan {
     private static ArrayList<FifteenPuzzle> states = new ArrayList<>();
     private long startTime = System.nanoTime();
     private int amountOfProcessedBoards = 1;
-    private char[] moves = {'L', 'U', 'R', 'D'};
+    private char[] moves = {'L', 'R', 'D', 'U'};
     private String fileStats;
     private String fileSol;
     private int visitedBoards = 0;
@@ -18,15 +18,14 @@ public class Manhattan {
         this.fileStats = fileStats;
         FifteenPuzzle fifteenPuzzle = new FifteenPuzzle(filename);
         fifteenPuzzle.countDistance();
-        System.out.println(fifteenPuzzle.countDistance());
         states.add(fifteenPuzzle);
     }
 
     public void manhattan() throws IOException {
         while (!states.isEmpty()) {
-            FifteenPuzzle firstState = states.get(0);
+            FifteenPuzzle firstState = states.remove(0);
             visitedBoards++;
-            states.remove(0);
+
             if (firstState.getDepthLevel() > maxRecursionLevel) {
                 maxRecursionLevel = firstState.getDepthLevel();
             }

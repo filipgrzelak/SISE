@@ -15,7 +15,6 @@ public class SwichClass {
                     board.setLastMove('L');
                     board.setX((byte) (board.getX() - 1));
                     list.add(board);
-
                 }
                 break;
             case 'U':
@@ -28,11 +27,10 @@ public class SwichClass {
                     board.setLastMove('U');
                     board.setY((byte) (board.getY() - 1));
                     list.add(board);
-
                 }
                 break;
             case 'R':
-                if (state.getX() != 3 && (state.getLastMove() != 'L')) {
+                if (state.getX() != state.getBoard().length - 1 && (state.getLastMove() != 'L')) {
                     FifteenPuzzle board = state.clone();
                     byte temp = board.getBoard()[state.getY()][state.getX() + 1];
                     board.getBoard()[state.getY()][state.getX() + 1] = 0;
@@ -41,11 +39,10 @@ public class SwichClass {
                     board.setLastMove('R');
                     board.setX((byte) (board.getX() + 1));
                     list.add(board);
-
                 }
                 break;
             case 'D':
-                if (state.getY() != 3 && (state.getLastMove() != 'U')) {
+                if (state.getY() != state.getBoard()[0].length - 1 && (state.getLastMove() != 'U')) {
                     FifteenPuzzle board = state.clone();
                     byte temp = board.getBoard()[state.getY() + 1][state.getX()];
                     board.getBoard()[state.getY() + 1][state.getX()] = 0;
@@ -54,7 +51,6 @@ public class SwichClass {
                     board.setLastMove('D');
                     board.setY((byte) (state.getY() + 1));
                     list.add(board);
-
                 }
                 break;
             default:
@@ -74,8 +70,9 @@ public class SwichClass {
                     board.getAllMovesList().add('L');
                     board.setLastMove('L');
                     board.setX((byte) (board.getX() - 1));
-                    int place = findTheRightPositionMan(board, list);
-                    if(place == -1 || place == 0) {
+                    board.countDistance();
+                    int place = findTheRightPosition(board, list);
+                    if (place == -1) {
                         list.add(board);
                     } else {
                         list.add(place, board);
@@ -91,8 +88,9 @@ public class SwichClass {
                     board.getAllMovesList().add('U');
                     board.setLastMove('U');
                     board.setY((byte) (board.getY() - 1));
-                    int place = findTheRightPositionMan(board, list);
-                    if(place == -1 || place == 0) {
+                    board.countDistance();
+                    int place = findTheRightPosition(board, list);
+                    if (place == -1) {
                         list.add(board);
                     } else {
                         list.add(place, board);
@@ -100,7 +98,7 @@ public class SwichClass {
                 }
                 break;
             case 'R':
-                if (state.getX() != 3 && (state.getLastMove() != 'L')) {
+                if (state.getX() != state.getBoard().length - 1 && (state.getLastMove() != 'L')) {
                     FifteenPuzzle board = state.clone();
                     byte temp = board.getBoard()[state.getY()][state.getX() + 1];
                     board.getBoard()[state.getY()][state.getX() + 1] = 0;
@@ -108,8 +106,9 @@ public class SwichClass {
                     board.getAllMovesList().add('R');
                     board.setLastMove('R');
                     board.setX((byte) (board.getX() + 1));
-                    int place = findTheRightPositionMan(board, list);
-                    if(place == -1 || place == 0) {
+                    board.countDistance();
+                    int place = findTheRightPosition(board, list);
+                    if (place == -1) {
                         list.add(board);
                     } else {
                         list.add(place, board);
@@ -117,7 +116,7 @@ public class SwichClass {
                 }
                 break;
             case 'D':
-                if (state.getY() != 3 && (state.getLastMove() != 'U')) {
+                if (state.getY() != state.getBoard()[0].length - 1 && (state.getLastMove() != 'U')) {
                     FifteenPuzzle board = state.clone();
                     byte temp = board.getBoard()[state.getY() + 1][state.getX()];
                     board.getBoard()[state.getY() + 1][state.getX()] = 0;
@@ -125,8 +124,9 @@ public class SwichClass {
                     board.getAllMovesList().add('D');
                     board.setLastMove('D');
                     board.setY((byte) (state.getY() + 1));
-                    int place = findTheRightPositionMan(board, list);
-                    if(place == -1 || place == 0) {
+                    board.countDistance();
+                    int place = findTheRightPosition(board, list);
+                    if (place == -1) {
                         list.add(board);
                     } else {
                         list.add(place, board);
@@ -150,8 +150,9 @@ public class SwichClass {
                     board.getAllMovesList().add('L');
                     board.setLastMove('L');
                     board.setX((byte) (board.getX() - 1));
-                    int place = findTheRightPositionHam(board, list);
-                    if(place == -1 || place == 0) {
+                    board.countWrongPlaces();
+                    int place = findTheRightPosition(board, list);
+                    if (place == -1) {
                         list.add(board);
                     } else {
                         list.add(place, board);
@@ -167,8 +168,9 @@ public class SwichClass {
                     board.getAllMovesList().add('U');
                     board.setLastMove('U');
                     board.setY((byte) (board.getY() - 1));
-                    int place = findTheRightPositionHam(board, list);
-                    if(place == -1 || place == 0) {
+                    board.countWrongPlaces();
+                    int place = findTheRightPosition(board, list);
+                    if (place == -1) {
                         list.add(board);
                     } else {
                         list.add(place, board);
@@ -176,7 +178,7 @@ public class SwichClass {
                 }
                 break;
             case 'R':
-                if (state.getX() != 3 && (state.getLastMove() != 'L')) {
+                if (state.getX() != state.getBoard().length - 1 && (state.getLastMove() != 'L')) {
                     FifteenPuzzle board = state.clone();
                     byte temp = board.getBoard()[state.getY()][state.getX() + 1];
                     board.getBoard()[state.getY()][state.getX() + 1] = 0;
@@ -184,8 +186,9 @@ public class SwichClass {
                     board.getAllMovesList().add('R');
                     board.setLastMove('R');
                     board.setX((byte) (board.getX() + 1));
-                    int place = findTheRightPositionHam(board, list);
-                    if(place == -1 || place == 0) {
+                    board.countWrongPlaces();
+                    int place = findTheRightPosition(board, list);
+                    if (place == -1) {
                         list.add(board);
                     } else {
                         list.add(place, board);
@@ -193,7 +196,7 @@ public class SwichClass {
                 }
                 break;
             case 'D':
-                if (state.getY() != 3 && (state.getLastMove() != 'U')) {
+                if (state.getY() != state.getBoard()[0].length - 1 && (state.getLastMove() != 'U')) {
                     FifteenPuzzle board = state.clone();
                     byte temp = board.getBoard()[state.getY() + 1][state.getX()];
                     board.getBoard()[state.getY() + 1][state.getX()] = 0;
@@ -201,8 +204,9 @@ public class SwichClass {
                     board.getAllMovesList().add('D');
                     board.setLastMove('D');
                     board.setY((byte) (state.getY() + 1));
-                    int place = findTheRightPositionHam(board, list);
-                    if(place == -1 || place == 0) {
+                    board.countWrongPlaces();
+                    int place = findTheRightPosition(board, list);
+                    if (place == -1) {
                         list.add(board);
                     } else {
                         list.add(place, board);
@@ -214,24 +218,13 @@ public class SwichClass {
         }
     }
 
-    private static int findTheRightPositionMan(FifteenPuzzle board, ArrayList<FifteenPuzzle> list) {
+    private static int findTheRightPosition(FifteenPuzzle board, ArrayList<FifteenPuzzle> list) {
         if (list.isEmpty()) {
             return 0;
         }
-        for (int i = 0; i < list.size(); i++) {
-            if (board.countDistance() <= list.get(i).countDistance()) {
-                return i;
-            }
-        }
-        return -1;
-    }
-
-    private static int findTheRightPositionHam(FifteenPuzzle board, ArrayList<FifteenPuzzle> list) {
-        if (list.isEmpty()) {
-            return 0;
-        }
-        for (int i = 0; i < list.size(); i++) {
-            if (board.countWrongPlaces() <= list.get(i).countWrongPlaces()) {
+        int size = list.size();
+        for (int i = 0; i < size; i++) {
+            if (board.getCountValue() <= list.get(i).getCountValue()) {
                 return i;
             }
         }

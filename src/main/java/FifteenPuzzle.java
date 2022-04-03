@@ -16,6 +16,7 @@ public class FifteenPuzzle implements Cloneable {
     private char lastMove = ' ';
     private byte x = 0;
     private byte y = 0;
+    private int countValue;
 
     public FifteenPuzzle(String filename) throws IOException {
         BufferedReader bf = new BufferedReader(new FileReader(filename));
@@ -112,55 +113,49 @@ public class FifteenPuzzle implements Cloneable {
         }
     }
 
-    private byte[] byteTabWithNumberPositions(int number) {
-        int counter = 1;
-        for (int i = 0; i < board.length; i++) {
-            for (int j = 0; j < board[i].length; j++) {
-                if (counter == number) {
-                    return new byte[]{(byte) i, (byte) j};
-                }
-                if (counter == board.length * board[i].length) {
-                    return new byte[]{(byte) (board.length - 1), (byte) (board[i].length - 1)};
-                }
-                counter++;
-            }
-        }
-        throw new IllegalArgumentException("Brak rozwiazan");
-    }
-
-    public int countDistance() {
+    public void countDistance() {
         int distance = 0;
         int value = 1;
+
+        distance += abs(board.length - 1 - x) + abs(board[0].length - 1 - y);
         for (int i = 0; i < board.length; i++) {
             for (int j = 0; j < board[i].length; j++) {
+                if (board[i][j] == 0) {
+                    value++;
+                    continue;
+                }
                 if (board[i][j] != value) {
-                    byte[] tab = byteTabWithNumberPositions(board[i][j]);
-                    distance += abs(tab[0] - i) + abs(tab[1] - j);
+                    distance += abs(((board[i][j] - 1) / board[i].length) - i) + abs(((board[i][j] - 1) % board[i].length) - j);
                 }
                 value++;
             }
         }
-        return distance;
+        countValue = distance + depthLevel/2;
     }
 
-    public int countWrongPlaces() {
+    public void countWrongPlaces() {
         int wrong = 0;
         int value = 1;
-        for (int i = 0; i < board.length; i++) {
-            for (int j = 0; j < board[i].length; j++) {
-                if ((board.length - 1) == i && (board[i].length - 1) == j) {
-                    if (board[i][j] != 0) {
-                        wrong++;
-                    }
-                    break;
+        if (x != board.length - 1 || y != board[0].length - 1) {
+            wrong++;
+        }
+        for (byte[] bytes : board) {
+            for (int j = 0; j < bytes.length; j++) {
+                if (bytes[j] == 0) {
+                    value++;
+                    continue;
                 }
-                if (board[i][j] != value) {
+                if (bytes[j] != value) {
                     wrong++;
                 }
                 value++;
             }
         }
-        return wrong;
+        countValue = wrong + depthLevel/2;
+    }
+
+    public int getCountValue() {
+        return countValue;
     }
 
     @Override

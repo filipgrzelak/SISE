@@ -7,7 +7,11 @@ public class Main {
 //        String filename3 = "C:\\SISE\\latwy.txt";
 //        Manhattan man1 = new Manhattan(filename1,"sol.txt","stats.txt");
 //        man1.manhattan();
-
+//
+//        FifteenPuzzle f = new FifteenPuzzle(filename1);
+//        f.countWrongPlaces();
+//        System.out.println(f.getCountValue());
+//
 //        Hamming ham1 = new Hamming(filename1, "rozwiazanie.txt", "statystyki.txt");
 //        ham1.hamming();
 

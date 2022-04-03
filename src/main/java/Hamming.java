@@ -5,7 +5,7 @@ public class Hamming {
     private static ArrayList<FifteenPuzzle> states = new ArrayList<>();
     private long startTime = System.nanoTime();
     private int amountOfProcessedBoards = 1;
-    private char[] moves = {'L', 'U', 'R', 'D'};
+    private char[] moves = {'L', 'R', 'D', 'U'};
     private String fileStats;
     private String fileSol;
     private int visitedBoards = 0;
