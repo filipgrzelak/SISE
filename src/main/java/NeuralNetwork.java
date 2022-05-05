@@ -3,10 +3,10 @@ import java.util.Arrays;
 public class NeuralNetwork {
 
     private final float learningRate;
-    private Matrix weightsIH;
-    private Matrix weightsHO;
-    private Matrix biasH;
-    private Matrix biasO;
+    public Matrix weightsIH;
+    public Matrix weightsHO;
+    public Matrix biasH;
+    public Matrix biasO;
 
     public NeuralNetwork(int inputNodes, int hiddenNodes, int outputNodes, float learningRate) {
         this.learningRate = learningRate;
@@ -31,7 +31,7 @@ public class NeuralNetwork {
         // activation function
         hidden = MatrixHelpers.sigmaOperationOnMatrix(hidden);
 
-        // Generating the output's output
+        // Generating the output
         Matrix output = MatrixHelpers.multiplyByMatrix(this.weightsHO, hidden);
         output = MatrixHelpers.addMatrixToMatrix(output, this.biasO);
         output = MatrixHelpers.sigmaOperationOnMatrix(output);
@@ -49,7 +49,7 @@ public class NeuralNetwork {
         // Activation function
         hidden = MatrixHelpers.sigmaOperationOnMatrix(hidden);
 
-        // Generating the output's output
+        // Generating the output
         Matrix outputs = MatrixHelpers.multiplyByMatrix(this.weightsHO, hidden);
         outputs = MatrixHelpers.addMatrixToMatrix(outputs, this.biasO);
         outputs = MatrixHelpers.sigmaOperationOnMatrix(outputs);
