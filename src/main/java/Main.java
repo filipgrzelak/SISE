@@ -11,6 +11,8 @@ public class Main {
         data.saveNeuralNetworkProperties();
 
         NeuralNetwork newNtwk = data.loadNeuralNetworkProperties();
-
+        var sth = data.loadLearningData();
+        var sth2 = data.loadUnknownData();
+        System.out.println("123");
     }
 }

@@ -105,6 +105,43 @@ public class Data {
 
         return new NeuralNetwork(0.1, weightsIH, weightsHO, biasH, biasO);
     }
+
+    public List<double[][]> loadLearningData() {
+        List<String> props = LineReader.readLinesFromFile("trainData.txt");
+        List<double[][]> data = new ArrayList<>();
+
+        for (int i = 0; i < props.size(); i++) {
+            List<String> temp = Arrays.stream(props.get(i).split(",")).toList();
+            double[] secondPart = new double[] { Double.parseDouble(temp.get(temp.size() - 1)) };
+
+            double[] firstPart = new double[temp.size() - 1];
+            for (int j = 0; j < firstPart.length; j++) {
+                firstPart[j] = Double.parseDouble(temp.get(j));
+            }
+            double[][] object = new double[][] { firstPart, secondPart };
+            data.add(object);
+
+        }
+
+        return data;
+    }
+
+    public List<double[]> loadUnknownData() {
+        List<String> props = LineReader.readLinesFromFile("iris.txt");
+        List<double[]> data = new ArrayList<>();
+
+        for (int i = 0; i < props.size(); i++) {
+            List<String> temp = Arrays.stream(props.get(i).split(",")).toList();
+            double[] firstPart = new double[temp.size() - 1];
+            for (int j = 0; j < firstPart.length; j++) {
+                firstPart[j] = Double.parseDouble(temp.get(j));
+            }
+            data.add(firstPart);
+        }
+
+        return data;
+    }
+
 //    public void setAccuracy() {
 //        boolean shouldContinue = true;
 //
