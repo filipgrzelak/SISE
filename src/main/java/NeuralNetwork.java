@@ -1,5 +1,8 @@
 public class NeuralNetwork {
 
+    private boolean isUsingBiasH = true;
+    private boolean isUsingBiasO = true;
+
     private final double learningRate;
     private Matrix weightsIH;
     private Matrix weightsHO;
@@ -42,14 +45,16 @@ public class NeuralNetwork {
         // Generating the Hidden Outputs
         Matrix inputs = MatrixHelpers.fromArray(inputArray);
         Matrix hidden = MatrixHelpers.multiplyByMatrix(this.weightsIH, inputs);
-        hidden = MatrixHelpers.addMatrixToMatrix(hidden, this.biasH);
+        if(isUsingBiasH)
+            hidden = MatrixHelpers.addMatrixToMatrix(hidden, this.biasH);
 
         // activation function
         hidden = MatrixHelpers.sigmaOperationOnMatrix(hidden);
 
         // Generating the output's output
         Matrix output = MatrixHelpers.multiplyByMatrix(this.weightsHO, hidden);
-        output = MatrixHelpers.addMatrixToMatrix(output, this.biasO);
+        if(isUsingBiasO)
+            output = MatrixHelpers.addMatrixToMatrix(output, this.biasO);
         output = MatrixHelpers.sigmaOperationOnMatrix(output);
 
         return MatrixHelpers.toArray(output);
@@ -60,14 +65,16 @@ public class NeuralNetwork {
         // Generating the Hidden Outputs
         Matrix inputs = MatrixHelpers.fromArray(inputArray);
         Matrix hidden = MatrixHelpers.multiplyByMatrix(this.weightsIH, inputs);
-        hidden = MatrixHelpers.addMatrixToMatrix(hidden, this.biasH);
+        if(isUsingBiasH)
+            hidden = MatrixHelpers.addMatrixToMatrix(hidden, this.biasH);
 
         // Activation function
         hidden = MatrixHelpers.sigmaOperationOnMatrix(hidden);
 
         // Generating the output's output
         Matrix outputs = MatrixHelpers.multiplyByMatrix(this.weightsHO, hidden);
-        outputs = MatrixHelpers.addMatrixToMatrix(outputs, this.biasO);
+        if(isUsingBiasO)
+            outputs = MatrixHelpers.addMatrixToMatrix(outputs, this.biasO);
         outputs = MatrixHelpers.sigmaOperationOnMatrix(outputs);
 
         // Convert array to matrix object
@@ -91,7 +98,8 @@ public class NeuralNetwork {
         this.weightsHO = MatrixHelpers.addMatrixToMatrix(this.weightsHO, weightHODeltas);
 
         // Adjust the bias by its deltas (which is just the gradients)
-        this.biasO = MatrixHelpers.addMatrixToMatrix(this.biasO, gradients);
+        if(isUsingBiasO)
+            this.biasO = MatrixHelpers.addMatrixToMatrix(this.biasO, gradients);
 
         // Calculate the hidden layer errors
         Matrix whoT = MatrixHelpers.transpose(this.weightsHO);
@@ -107,7 +115,8 @@ public class NeuralNetwork {
         Matrix weightIHDeltas = MatrixHelpers.multiplyByMatrix(hiddenGradient, inputsT);
 
         this.weightsIH = MatrixHelpers.addMatrixToMatrix(this.weightsIH, weightIHDeltas);
-        this.biasH = MatrixHelpers.addMatrixToMatrix(this.biasH, hiddenGradient);
+        if(isUsingBiasH)
+            this.biasH = MatrixHelpers.addMatrixToMatrix(this.biasH, hiddenGradient);
     }
 
     public void setWeightsIH(Matrix weightsIH) {

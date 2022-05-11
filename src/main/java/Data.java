@@ -7,28 +7,19 @@ public class Data {
     private final Scanner scanner;
     private NeuralNetwork nn;
 
-    double[][][] trainigData = {
-            {{0.0, 1.0}, {1.0}},
-            {{1.0, 0.0}, {1.0}},
-            {{0.0, 0.0}, {0.0}},
-            {{1.0, 1.0}, {0.0}},
-    };
-
-    double[][] unknownData = {
-            {0.0, 1.0},
-            {1.0, 0.0},
-            {0.0, 0.0},
-            {1.0, 1.0},
-    };
+    List<double[][]> trainigData;
+    List<double[]> unknownData;
 
     public Data(NeuralNetwork neuralNetwork) {
         this.scanner = new Scanner(System.in);
         this.nn = neuralNetwork;
+        this.trainigData = loadTrainingData();
+        this.unknownData = loadUnknownData();
     }
 
     public void train() {
-        List<double[][]> data = Arrays.asList(trainigData);
-        for (int i = 0; i < 40000; i++) {
+        List<double[][]> data = trainigData;
+        for (int i = 0; i < 200000; i++) {
             Collections.shuffle(data);
             for (double[][] sample : data) {
                 nn.train(sample[0], sample[1]);
@@ -37,16 +28,37 @@ public class Data {
     }
 
     public void predict() {
-        for (double[] unknownDatum : unknownData) {
-            System.out.println(Arrays.toString(nn.predict(unknownDatum)));
+
+        // 0 - 1spiecies, 1 - 2spiecies, 2 - 3spiecies, 3 - unknown
+        double[] statistics = new double[4];
+
+        for (int i = 0; i < unknownData.size() - 1; i++) {
+            Double[] prediction = nn.predict(unknownData.get(i));
+            System.out.println(Arrays.toString(prediction));
+
+            if(
+                    prediction[0] > 0.8 && prediction[1] > 0.8 ||
+                    prediction[1] > 0.8 && prediction[2] > 0.8 ||
+                    prediction[0] > 0.8 && prediction[2] > 0.8
+            ) {
+                statistics[3]++;
+            } else if (prediction[0] > 0.8) {
+                statistics[0]++;
+            } else if (prediction[1] > 0.8) {
+                statistics[1]++;
+            } else if (prediction[2] > 0.8) {
+                statistics[2]++;
+            }
         }
+
+        System.out.println(Arrays.toString(statistics));
     }
 
     public void saveNeuralNetworkProperties() {
         LineReader.saveNeuralNetworkPropertiesToFile("neuralNetworkProperties.txt", nn);
     }
 
-    public NeuralNetwork loadNeuralNetworkProperties() {
+    public void loadNeuralNetworkProperties() {
         int counter = 0;
         Matrix weightsIH;
         Matrix weightsHO;
@@ -103,16 +115,26 @@ public class Data {
             }
         }
 
-        return new NeuralNetwork(0.1, weightsIH, weightsHO, biasH, biasO);
+        this.nn = new NeuralNetwork(0.1, weightsIH, weightsHO, biasH, biasO);
     }
 
-    public List<double[][]> loadLearningData() {
+    public List<double[][]> loadTrainingData() {
         List<String> props = LineReader.readLinesFromFile("trainData.txt");
         List<double[][]> data = new ArrayList<>();
 
         for (int i = 0; i < props.size(); i++) {
             List<String> temp = Arrays.stream(props.get(i).split(",")).toList();
-            double[] secondPart = new double[] { Double.parseDouble(temp.get(temp.size() - 1)) };
+            double[] secondPart;
+            if(Double.parseDouble(temp.get(temp.size() - 1)) == 0.0) {
+                secondPart = new double[] { 1.0, 0.0, 0.0 };
+            } else if (Double.parseDouble(temp.get(temp.size() - 1)) == 1.0) {
+                secondPart = new double[] { 0.0, 1.0, 0.0 };
+            } else if (Double.parseDouble(temp.get(temp.size() - 1)) == 2.0) {
+                secondPart = new double[] { 0.0, 0.0, 1.0 };
+            } else {
+                System.out.println("error in loadTrainingData");
+                return null;
+            }
 
             double[] firstPart = new double[temp.size() - 1];
             for (int j = 0; j < firstPart.length; j++) {
@@ -130,7 +152,7 @@ public class Data {
         List<String> props = LineReader.readLinesFromFile("iris.txt");
         List<double[]> data = new ArrayList<>();
 
-        for (int i = 0; i < props.size(); i++) {
+        for (int i = 0; i < props.size() - 1; i++) {
             List<String> temp = Arrays.stream(props.get(i).split(",")).toList();
             double[] firstPart = new double[temp.size() - 1];
             for (int j = 0; j < firstPart.length; j++) {
@@ -141,20 +163,4 @@ public class Data {
 
         return data;
     }
-
-//    public void setAccuracy() {
-//        boolean shouldContinue = true;
-//
-//        while (shouldContinue) {
-//            System.out.println();
-//            try {
-//                System.out.print("Podaj dokładność: ");
-//                accuracy = Double.parseDouble(scanner.nextLine());
-//
-//                shouldContinue = false;
-//            } catch (Exception e) {
-//                JOptionPane.showMessageDialog(null, "Podano nieprawidłową liczbę!");
-//            }
-//        }
-//    }
 }
