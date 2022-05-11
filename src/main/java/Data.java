@@ -48,6 +48,8 @@ public class Data {
                 statistics[1]++;
             } else if (prediction[2] > 0.8) {
                 statistics[2]++;
+            } else {
+                statistics[3]++;
             }
         }
 
