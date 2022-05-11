@@ -1,14 +1,20 @@
-import java.util.Arrays;
-
 public class NeuralNetwork {
 
-    private final float learningRate;
+    private final double learningRate;
     private Matrix weightsIH;
     private Matrix weightsHO;
     private Matrix biasH;
     private Matrix biasO;
 
-    public NeuralNetwork(int inputNodes, int hiddenNodes, int outputNodes, float learningRate) {
+    private int inputNodes;
+    private int hiddenNodes;
+    private int outputNodes;
+
+    public NeuralNetwork(int inputNodes, int hiddenNodes, int outputNodes, double learningRate) {
+        this.inputNodes = inputNodes;
+        this.hiddenNodes = hiddenNodes;
+        this.outputNodes = outputNodes;
+
         this.learningRate = learningRate;
 
         this.weightsIH = new Matrix(hiddenNodes, inputNodes);
@@ -17,11 +23,21 @@ public class NeuralNetwork {
         this.biasH = new Matrix(hiddenNodes, 1);
         this.biasO = new Matrix(outputNodes, 1);
 
-        weightsIH = MatrixHelpers.randomizeDataValues(weightsIH);
-        weightsHO = MatrixHelpers.randomizeDataValues(weightsHO);
+        this.weightsIH = MatrixHelpers.randomizeDataValues(weightsIH);
+        this.weightsHO = MatrixHelpers.randomizeDataValues(weightsHO);
     }
 
-    public Float[] predict(Float[] inputArray) {
+    public NeuralNetwork(double learningRate, Matrix weightsIH, Matrix weightsHO, Matrix biasH, Matrix biasO) {
+        this.learningRate = learningRate;
+
+        this.weightsIH = weightsIH;
+        this.weightsHO = weightsHO;
+
+        this.biasH = biasH;
+        this.biasO = biasO;
+    }
+
+    public Double[] predict(double[] inputArray) {
 
         // Generating the Hidden Outputs
         Matrix inputs = MatrixHelpers.fromArray(inputArray);
@@ -39,7 +55,7 @@ public class NeuralNetwork {
         return MatrixHelpers.toArray(output);
     }
 
-    public void train(Float[] inputArray, Float[] targetArray) {
+    public void train(double[] inputArray, double[] targetArray) {
 
         // Generating the Hidden Outputs
         Matrix inputs = MatrixHelpers.fromArray(inputArray);
@@ -93,4 +109,53 @@ public class NeuralNetwork {
         this.weightsIH = MatrixHelpers.addMatrixToMatrix(this.weightsIH, weightIHDeltas);
         this.biasH = MatrixHelpers.addMatrixToMatrix(this.biasH, hiddenGradient);
     }
+
+    public void setWeightsIH(Matrix weightsIH) {
+        this.weightsIH = weightsIH;
+    }
+
+    public void setWeightsHO(Matrix weightsHO) {
+        this.weightsHO = weightsHO;
+    }
+
+    public void setBiasH(Matrix biasH) {
+        this.biasH = biasH;
+    }
+
+    public void setBiasO(Matrix biasO) {
+        this.biasO = biasO;
+    }
+
+    public double getLearningRate() {
+        return learningRate;
+    }
+
+    public Matrix getWeightsIH() {
+        return weightsIH;
+    }
+
+    public Matrix getWeightsHO() {
+        return weightsHO;
+    }
+
+    public Matrix getBiasH() {
+        return biasH;
+    }
+
+    public Matrix getBiasO() {
+        return biasO;
+    }
+
+    public int getInputNodes() {
+        return inputNodes;
+    }
+
+    public int getHiddenNodes() {
+        return hiddenNodes;
+    }
+
+    public int getOutputNodes() {
+        return outputNodes;
+    }
+
 }
