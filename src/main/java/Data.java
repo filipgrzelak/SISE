@@ -1,8 +1,5 @@
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class Data {
@@ -30,9 +27,12 @@ public class Data {
     }
 
     public void train() {
+        List<double[][]> data = Arrays.asList(trainigData);
         for (int i = 0; i < 40000; i++) {
-            int random = (int) (Math.random() * 4);
-            nn.train(trainigData[random][0], trainigData[random][1]);
+            Collections.shuffle(data);
+            for (double[][] sample : data) {
+                nn.train(sample[0], sample[1]);
+            }
         }
     }
 
