@@ -27,7 +27,7 @@ public class MatrixHelpers {
 
         for (int i = 0; i < b.rows; i++) {
             for (int j = 0; j < b.cols; j++) {
-                b.data[i][j] = (float)(Math.random() * 1) - 1;
+                b.data[i][j] = (double)(Math.random() * 1) - 1;
             }
         }
 
@@ -39,7 +39,7 @@ public class MatrixHelpers {
 
         for (int i = 0; i < b.rows; i++) {
             for (int j = 0; j < b.cols; j++) {
-                b.data[i][j] = (float)(Math.random() * 1) - 1;
+                b.data[i][j] = (double)(Math.random() * 1) - 1;
             }
         }
 
@@ -70,7 +70,7 @@ public class MatrixHelpers {
         return b;
     }
 
-    public static Matrix multiplyByScalar(Matrix a, float n) {
+    public static Matrix multiplyByScalar(Matrix a, double n) {
         Matrix b = new Matrix(a.rows, a.cols);
 
         for (int i = 0; i < b.rows; i++) {
@@ -104,7 +104,7 @@ public class MatrixHelpers {
 
         for (int i = 0; i < c.rows; i++) {
             for (int j = 0; j < c.cols; j++) {
-                Float sum = 0f;
+                double sum = 0.0;
                 for (int k = 0; k < a.cols; k++) {
                     sum += a.data[i][k] * b.data[k][j];
                 }
@@ -115,7 +115,7 @@ public class MatrixHelpers {
         return c;
     }
 
-    public static Matrix fromArray(Float[] arr) {
+    public static Matrix fromArray(double[] arr) {
         Matrix m = new Matrix(arr.length, 1);
         for (int i = 0; i < arr.length; i++) {
             m.data[i][0] = arr[i];
@@ -123,14 +123,14 @@ public class MatrixHelpers {
         return m;
     }
 
-    public static Float[] toArray(Matrix m) {
-        List<Float> arr = new ArrayList<Float>();
+    public static Double[] toArray(Matrix m) {
+        List<Double> arr = new ArrayList<Double>();
         for (int i = 0; i < m.rows; i++) {
             for (int j = 0; j < m.cols; j++) {
                 arr.add(m.data[i][j]);
             }
         }
-        return arr.toArray(Float[]::new);
+        return arr.toArray(Double[]::new);
     }
 
     public static Matrix sigmaOperationOnMatrix(Matrix a) {
@@ -157,11 +157,11 @@ public class MatrixHelpers {
         return b;
     }
 
-    private static float sigma(Float x) {
-        return (float) (1 / (1 + Math.exp(-x)));
+    private static double sigma(double x) {
+        return (double) (1 / (1 + Math.exp(-x)));
     }
 
-    private static float dSigma(Float x) {
+    private static double dSigma(double x) {
         return x * (1 - x);
     }
 }
