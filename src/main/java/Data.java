@@ -1,3 +1,5 @@
+import org.jfree.data.json.impl.JSONArray;
+
 import javax.swing.*;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
@@ -10,12 +12,20 @@ public class Data {
 
     List<double[][]> trainigData;
     List<double[]> unknownData;
+    List<double[]> unknownDataWithSpiecies;
+
+    private double TP = 0;
+    private double TN = 0;
+    private double FP = 0;
+    private double FN = 0;
+
 
     public Data(NeuralNetwork neuralNetwork) {
         this.scanner = new Scanner(System.in);
         this.nn = neuralNetwork;
         this.trainigData = loadTrainingData();
         this.unknownData = loadUnknownData();
+        this.unknownDataWithSpiecies = loadUnknownDataWithSpiecies();
     }
 
     public void train() {
@@ -32,8 +42,12 @@ public class Data {
             calculatedNetworkErrors.add(nn.getCurrentNeuralNetworkError());
         }
 
+        drawChart(calculatedNetworkErrors, agesCounter);
+    }
+
+    private void drawChart(ArrayList<Double> errs, ArrayList<Integer> ages) {
         SwingUtilities.invokeLater(() -> {
-            Chart errorChart = new Chart("Neural Network errors", agesCounter, calculatedNetworkErrors);
+            Chart errorChart = new Chart("Neural Network errors", ages, errs);
             errorChart.setAlwaysOnTop(true);
             errorChart.pack();
             errorChart.setSize(600, 400);
@@ -46,15 +60,47 @@ public class Data {
 
         // 0 - 1spiecies, 1 - 2spiecies, 2 - 3spiecies
         double[] statistics = new double[3];
-
         for (int i = 0; i < unknownData.size() - 1; i++) {
             Double[] prediction = nn.predict(unknownData.get(i));
             System.out.println(Arrays.toString(prediction));
-            int index = Arrays.asList(prediction).indexOf(Collections.max(Arrays.asList(prediction)));
-            statistics[index]++;
+
+            int typedSpecies = Arrays.asList(prediction).indexOf(Collections.max(Arrays.asList(prediction)));
+            int actualSpiecies = (int) unknownDataWithSpiecies.get(i)[4];
+
+            int[] helperTyped = new int[3];
+            int[] helperActual = new int[3];
+            helperTyped[typedSpecies] = 1;
+            helperActual[actualSpiecies] = 1;
+
+            for (int j = 0; j < helperTyped.length; j++) {
+                if (helperTyped[j] == 1) {
+                    if (helperTyped[j] == helperActual[j]) this.TP++;
+                    else if (helperTyped[j] != helperActual[j]) this.TN++;
+                } else {
+                    if (helperActual[j] == 1) this.FP++;
+                    else if (helperActual[j] != 1) this.FN++;
+                }
+            }
+
+            statistics[typedSpecies]++;
         }
 
         System.out.println(Arrays.toString(statistics));
+        System.out.println(getPrecision());
+        System.out.println(getRecall());
+        System.out.println(getFMeasure());
+    }
+
+    private double getPrecision() {
+        return (this.TP/(this.TP+this.FP));
+    }
+
+    private double getRecall() {
+        return (this.TP/(this.TP+this.FN));
+    }
+
+    private double getFMeasure() {
+        return 2 * ((getPrecision() * getRecall()) / (getPrecision() + getRecall()));
     }
 
     public void saveNeuralNetworkProperties() {
@@ -158,6 +204,22 @@ public class Data {
         for (int i = 0; i < props.size() - 1; i++) {
             List<String> temp = Arrays.stream(props.get(i).split(",")).toList();
             double[] firstPart = new double[temp.size() - 1];
+            for (int j = 0; j < firstPart.length; j++) {
+                firstPart[j] = Double.parseDouble(temp.get(j));
+            }
+            data.add(firstPart);
+        }
+
+        return data;
+    }
+
+    public List<double[]> loadUnknownDataWithSpiecies() {
+        List<String> props = LineReader.readLinesFromFile("irisUnknownData.txt");
+        List<double[]> data = new ArrayList<>();
+
+        for (int i = 0; i < props.size() - 1; i++) {
+            List<String> temp = Arrays.stream(props.get(i).split(",")).toList();
+            double[] firstPart = new double[temp.size()];
             for (int j = 0; j < firstPart.length; j++) {
                 firstPart[j] = Double.parseDouble(temp.get(j));
             }
