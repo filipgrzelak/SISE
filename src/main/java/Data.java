@@ -19,6 +19,8 @@ public class Data {
     private double FP = 0;
     private double FN = 0;
 
+    private double accuracy = 0;
+
 
     public Data(NeuralNetwork neuralNetwork) {
         this.scanner = new Scanner(System.in);
@@ -60,6 +62,9 @@ public class Data {
 
         // 0 - 1spiecies, 1 - 2spiecies, 2 - 3spiecies
         double[] statistics = new double[3];
+        double ij = 0;
+        double all = 0;
+
         for (int i = 0; i < unknownData.size() - 1; i++) {
             Double[] prediction = nn.predict(unknownData.get(i));
             System.out.println(Arrays.toString(prediction));
@@ -86,17 +91,22 @@ public class Data {
         }
 
         System.out.println(Arrays.toString(statistics));
-        System.out.println(getPrecision());
-        System.out.println(getRecall());
-        System.out.println(getFMeasure());
+        System.out.println("Accuracy: " + getAccuracy());
+        System.out.println("Precision: " + getPrecision());
+        System.out.println("Recall: " + getRecall());
+        System.out.println("FMeasure: " + getFMeasure());
     }
 
     private double getPrecision() {
-        return (this.TP/(this.TP+this.FP));
+        return (this.TP / (this.TP + this.FP));
+    }
+
+    private double getAccuracy() {
+        return ((this.TP + this.FN) / (this.TP + this.TN + this.FP + this.FN));
     }
 
     private double getRecall() {
-        return (this.TP/(this.TP+this.FN));
+        return (this.TP / (this.TP + this.FN));
     }
 
     private double getFMeasure() {
