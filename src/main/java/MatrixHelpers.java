@@ -27,7 +27,7 @@ public class MatrixHelpers {
 
         for (int i = 0; i < b.rows; i++) {
             for (int j = 0; j < b.cols; j++) {
-                b.data[i][j] = (double)(Math.random() * 1) - 1;
+                b.data[i][j] = (((Math.random() * 2) - 1) / (Math.sqrt(a.rows)));
             }
         }
 

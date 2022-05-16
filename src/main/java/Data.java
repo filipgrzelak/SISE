@@ -19,7 +19,7 @@ public class Data {
 
     public void train() {
         List<double[][]> data = trainigData;
-        for (int i = 0; i < 200000; i++) {
+        for (int i = 0; i < 40000; i++) {
             Collections.shuffle(data);
             for (double[][] sample : data) {
                 nn.train(sample[0], sample[1]);
@@ -29,28 +29,14 @@ public class Data {
 
     public void predict() {
 
-        // 0 - 1spiecies, 1 - 2spiecies, 2 - 3spiecies, 3 - unknown
-        double[] statistics = new double[4];
+        // 0 - 1spiecies, 1 - 2spiecies, 2 - 3spiecies
+        double[] statistics = new double[3];
 
         for (int i = 0; i < unknownData.size() - 1; i++) {
             Double[] prediction = nn.predict(unknownData.get(i));
             System.out.println(Arrays.toString(prediction));
-
-            if(
-                    prediction[0] > 0.8 && prediction[1] > 0.8 ||
-                    prediction[1] > 0.8 && prediction[2] > 0.8 ||
-                    prediction[0] > 0.8 && prediction[2] > 0.8
-            ) {
-                statistics[3]++;
-            } else if (prediction[0] > 0.8) {
-                statistics[0]++;
-            } else if (prediction[1] > 0.8) {
-                statistics[1]++;
-            } else if (prediction[2] > 0.8) {
-                statistics[2]++;
-            } else {
-                statistics[3]++;
-            }
+            int index = Arrays.asList(prediction).indexOf(Collections.max(Arrays.asList(prediction)));
+            statistics[index]++;
         }
 
         System.out.println(Arrays.toString(statistics));
@@ -117,7 +103,7 @@ public class Data {
             }
         }
 
-        this.nn = new NeuralNetwork(0.1, weightsIH, weightsHO, biasH, biasO);
+        this.nn = new NeuralNetwork(0.1, 0.9, weightsIH, weightsHO, biasH, biasO);
     }
 
     public List<double[][]> loadTrainingData() {

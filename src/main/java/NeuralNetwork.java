@@ -4,6 +4,7 @@ public class NeuralNetwork {
     private boolean isUsingBiasO = true;
 
     private final double learningRate;
+    private final double momenutm;
     private Matrix weightsIH;
     private Matrix weightsHO;
     private Matrix biasH;
@@ -13,12 +14,13 @@ public class NeuralNetwork {
     private int hiddenNodes;
     private int outputNodes;
 
-    public NeuralNetwork(int inputNodes, int hiddenNodes, int outputNodes, double learningRate) {
+    public NeuralNetwork(int inputNodes, int hiddenNodes, int outputNodes, double learningRate, double momentum) {
         this.inputNodes = inputNodes;
         this.hiddenNodes = hiddenNodes;
         this.outputNodes = outputNodes;
 
         this.learningRate = learningRate;
+        this.momenutm = momentum;
 
         this.weightsIH = new Matrix(hiddenNodes, inputNodes);
         this.weightsHO = new Matrix(outputNodes, hiddenNodes);
@@ -30,8 +32,9 @@ public class NeuralNetwork {
         this.weightsHO = MatrixHelpers.randomizeDataValues(weightsHO);
     }
 
-    public NeuralNetwork(double learningRate, Matrix weightsIH, Matrix weightsHO, Matrix biasH, Matrix biasO) {
+    public NeuralNetwork(double learningRate, double momenutm, Matrix weightsIH, Matrix weightsHO, Matrix biasH, Matrix biasO) {
         this.learningRate = learningRate;
+        this.momenutm = momenutm;
 
         this.weightsIH = weightsIH;
         this.weightsHO = weightsHO;
@@ -65,6 +68,7 @@ public class NeuralNetwork {
         // Generating the Hidden Outputs
         Matrix inputs = MatrixHelpers.fromArray(inputArray);
         Matrix hidden = MatrixHelpers.multiplyByMatrix(this.weightsIH, inputs);
+        Matrix prevHidden = this.weightsIH;
         if(isUsingBiasH)
             hidden = MatrixHelpers.addMatrixToMatrix(hidden, this.biasH);
 
@@ -73,6 +77,7 @@ public class NeuralNetwork {
 
         // Generating the output
         Matrix outputs = MatrixHelpers.multiplyByMatrix(this.weightsHO, hidden);
+        Matrix prevOutputs = this.weightsHO;
         if(isUsingBiasO)
             outputs = MatrixHelpers.addMatrixToMatrix(outputs, this.biasO);
         outputs = MatrixHelpers.sigmaOperationOnMatrix(outputs);
@@ -97,6 +102,13 @@ public class NeuralNetwork {
         // Adjust the weights by deltas
         this.weightsHO = MatrixHelpers.addMatrixToMatrix(this.weightsHO, weightHODeltas);
 
+        // Momentum
+        if(momenutm != 0) {
+            Matrix momentumFactor = MatrixHelpers.subtract(this.weightsHO, prevOutputs);
+            momentumFactor = MatrixHelpers.multiplyByScalar(momentumFactor, momenutm);
+            this.weightsHO = MatrixHelpers.addMatrixToMatrix(this.weightsHO, momentumFactor);
+        }
+
         // Adjust the bias by its deltas (which is just the gradients)
         if(isUsingBiasO)
             this.biasO = MatrixHelpers.addMatrixToMatrix(this.biasO, gradients);
@@ -115,28 +127,16 @@ public class NeuralNetwork {
         Matrix weightIHDeltas = MatrixHelpers.multiplyByMatrix(hiddenGradient, inputsT);
 
         this.weightsIH = MatrixHelpers.addMatrixToMatrix(this.weightsIH, weightIHDeltas);
+
+        // Momentum
+        if(momenutm != 0) {
+            Matrix momentumFactor = MatrixHelpers.subtract(this.weightsIH, prevHidden);
+            momentumFactor = MatrixHelpers.multiplyByScalar(momentumFactor, momenutm);
+            this.weightsIH = MatrixHelpers.addMatrixToMatrix(this.weightsIH, momentumFactor);
+        }
+
         if(isUsingBiasH)
             this.biasH = MatrixHelpers.addMatrixToMatrix(this.biasH, hiddenGradient);
-    }
-
-    public void setWeightsIH(Matrix weightsIH) {
-        this.weightsIH = weightsIH;
-    }
-
-    public void setWeightsHO(Matrix weightsHO) {
-        this.weightsHO = weightsHO;
-    }
-
-    public void setBiasH(Matrix biasH) {
-        this.biasH = biasH;
-    }
-
-    public void setBiasO(Matrix biasO) {
-        this.biasO = biasO;
-    }
-
-    public double getLearningRate() {
-        return learningRate;
     }
 
     public Matrix getWeightsIH() {
