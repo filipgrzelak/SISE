@@ -5,6 +5,8 @@ public class NeuralNetwork {
 
     private final double learningRate;
     private final double momenutm;
+    private double currentNeuralNetworkError = 0.0;
+
     private Matrix weightsIH;
     private Matrix weightsHO;
     private Matrix biasH;
@@ -137,6 +139,29 @@ public class NeuralNetwork {
 
         if(isUsingBiasH)
             this.biasH = MatrixHelpers.addMatrixToMatrix(this.biasH, hiddenGradient);
+
+        calculateNetworkError(outputErrors.data, hiddenErrors.data);
+    }
+
+    private void calculateNetworkError(double[][] outErrors, double[][] hiddenError) {
+        double avgFirst = 0.0;
+        for (int i = 0; i < outErrors.length; i++) {
+            for (int j = 0; j < outErrors[0].length; j++) {
+                avgFirst += Math.abs(outErrors[i][j]) * Math.abs(outErrors[i][j]);
+            }
+        }
+        avgFirst = Math.sqrt(avgFirst / ((hiddenNodes + outputNodes) * outputNodes));
+
+        double avgSecond = 0.0;
+        for (int i = 0; i < hiddenError.length; i++) {
+            for (int j = 0; j < hiddenError[0].length; j++) {
+                avgSecond += Math.abs(hiddenError[i][j]) * Math.abs(hiddenError[i][j]);
+            }
+        }
+
+        avgSecond = Math.sqrt(avgSecond / ((hiddenNodes + outputNodes) * hiddenNodes));
+
+        this.currentNeuralNetworkError = (avgSecond + avgFirst);
     }
 
     public Matrix getWeightsIH() {
@@ -167,4 +192,7 @@ public class NeuralNetwork {
         return outputNodes;
     }
 
+    public double getCurrentNeuralNetworkError() {
+        return currentNeuralNetworkError;
+    }
 }

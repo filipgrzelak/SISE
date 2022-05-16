@@ -1,3 +1,4 @@
+import javax.swing.*;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -18,13 +19,27 @@ public class Data {
     }
 
     public void train() {
+        int ages = 40000;
+        ArrayList<Double> calculatedNetworkErrors = new ArrayList<>();
+        ArrayList<Integer> agesCounter = new ArrayList<>();
         List<double[][]> data = trainigData;
-        for (int i = 0; i < 40000; i++) {
+        for (int i = 0; i < ages; i++) {
+            agesCounter.add(i);
             Collections.shuffle(data);
             for (double[][] sample : data) {
                 nn.train(sample[0], sample[1]);
             }
+            calculatedNetworkErrors.add(nn.getCurrentNeuralNetworkError());
         }
+
+        SwingUtilities.invokeLater(() -> {
+            Chart errorChart = new Chart("Neural Network errors", agesCounter, calculatedNetworkErrors);
+            errorChart.setAlwaysOnTop(true);
+            errorChart.pack();
+            errorChart.setSize(600, 400);
+            errorChart.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+            errorChart.setVisible(true);
+        });
     }
 
     public void predict() {
