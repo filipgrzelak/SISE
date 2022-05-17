@@ -62,8 +62,6 @@ public class Data {
 
         // 0 - 1spiecies, 1 - 2spiecies, 2 - 3spiecies
         double[] statistics = new double[3];
-        double ij = 0;
-        double all = 0;
 
         for (int i = 0; i < unknownData.size() - 1; i++) {
             Double[] prediction = nn.predict(unknownData.get(i));
@@ -91,6 +89,10 @@ public class Data {
         }
 
         System.out.println(Arrays.toString(statistics));
+        System.out.println("TP: " + this.TP);
+        System.out.println("TN: " + this.TN);
+        System.out.println("FP: " + this.FP);
+        System.out.println("FN: " + this.FN);
         System.out.println("Accuracy: " + getAccuracy());
         System.out.println("Precision: " + getPrecision());
         System.out.println("Recall: " + getRecall());
