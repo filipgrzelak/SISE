@@ -22,6 +22,23 @@ public class MatrixHelpers {
         return c;
     }
 
+    public static Matrix calculateError(Matrix a, Matrix b) {
+        if (a.rows != b.rows || a.cols != b.cols) {
+            System.out.println("Columns and rows of matrix doesn't match");
+            return null;
+        }
+
+        Matrix c = new Matrix(a.rows, a.cols);
+
+        for (int i = 0; i < a.rows; i++) {
+            for (int j = 0; j < a.cols; j++) {
+                c.data[i][j] = ((a.data[i][j] - b.data[i][j]) * (a.data[i][j] - b.data[i][j])) / 2.0;
+            }
+        }
+
+        return c;
+    }
+
     public static Matrix randomizeDataValues(Matrix a) {
         Matrix b = a.clone();
 
@@ -92,6 +109,20 @@ public class MatrixHelpers {
         }
 
         return c;
+    }
+
+    public static Matrix multiplyTempCos(Matrix a, Matrix b) {
+        Matrix temp = new Matrix(a.rows ,b.cols);
+        for(int i = 0; i < temp.rows; i++) {
+            for(int j = 0; j < temp.cols; j++) {
+                double sum = 0;
+                for(int k = 0; k < a.cols; k++) {
+                    sum += a.data[i][k] * b.data[k][j];
+                }
+                temp.data[i][j] = sum;
+            }
+        }
+        return temp;
     }
 
     public static Matrix multiplyByMatrix(Matrix a, Matrix b) {

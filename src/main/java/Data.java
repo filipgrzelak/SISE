@@ -14,11 +14,6 @@ public class Data {
     List<double[]> unknownData;
     List<double[]> unknownDataWithSpiecies;
 
-    private double TP = 0;
-    private double TN = 0;
-    private double FP = 0;
-    private double FN = 0;
-
     private double accuracy = 0;
 
 
@@ -31,7 +26,7 @@ public class Data {
     }
 
     public void train() {
-        int ages = 40000;
+        int ages = 6000;
         ArrayList<Double> calculatedNetworkErrors = new ArrayList<>();
         ArrayList<Integer> agesCounter = new ArrayList<>();
         List<double[][]> data = trainigData;
@@ -41,7 +36,8 @@ public class Data {
             for (double[][] sample : data) {
                 nn.train(sample[0], sample[1]);
             }
-            calculatedNetworkErrors.add(nn.getCurrentNeuralNetworkError());
+            calculatedNetworkErrors.add(nn.getCurrentNeuralNetworkError() / trainigData.size());
+            nn.currentNeuralNetworkError = 0.0;
         }
 
         drawChart(calculatedNetworkErrors, agesCounter);
@@ -62,57 +58,33 @@ public class Data {
 
         // 0 - 1spiecies, 1 - 2spiecies, 2 - 3spiecies
         double[] statistics = new double[3];
+        ConfussionMatrix zero = new ConfussionMatrix(0);
+        ConfussionMatrix first = new ConfussionMatrix(1);
+        ConfussionMatrix second = new ConfussionMatrix(2);
 
-        for (int i = 0; i < unknownData.size() - 1; i++) {
+        for (int i = 0; i < unknownData.size(); i++) {
             Double[] prediction = nn.predict(unknownData.get(i));
             System.out.println(Arrays.toString(prediction));
 
-            int typedSpecies = Arrays.asList(prediction).indexOf(Collections.max(Arrays.asList(prediction)));
+            // to co klasyfikuje klasyfikator
+            int classifierType = Arrays.asList(prediction).indexOf(Collections.max(Arrays.asList(prediction)));
+
+            // to co powinno byc na prawde
             int actualSpiecies = (int) unknownDataWithSpiecies.get(i)[4];
 
-            int[] helperTyped = new int[3];
-            int[] helperActual = new int[3];
-            helperTyped[typedSpecies] = 1;
-            helperActual[actualSpiecies] = 1;
+            // hipoteza 0 lub 1 lub 2
+            zero.calculateConditions(classifierType, actualSpiecies);
+            first.calculateConditions(classifierType, actualSpiecies);
+            second.calculateConditions(classifierType, actualSpiecies);
 
-            for (int j = 0; j < helperTyped.length; j++) {
-                if (helperTyped[j] == 1) {
-                    if (helperTyped[j] == helperActual[j]) this.TP++;
-                    else if (helperTyped[j] != helperActual[j]) this.TN++;
-                } else {
-                    if (helperActual[j] == 1) this.FP++;
-                    else if (helperActual[j] != 1) this.FN++;
-                }
-            }
-
-            statistics[typedSpecies]++;
+            statistics[classifierType]++;
         }
 
         System.out.println(Arrays.toString(statistics));
-        System.out.println("TP: " + this.TP);
-        System.out.println("TN: " + this.TN);
-        System.out.println("FP: " + this.FP);
-        System.out.println("FN: " + this.FN);
-        System.out.println("Accuracy: " + getAccuracy());
-        System.out.println("Precision: " + getPrecision());
-        System.out.println("Recall: " + getRecall());
-        System.out.println("FMeasure: " + getFMeasure());
-    }
 
-    private double getPrecision() {
-        return (this.TP / (this.TP + this.FP));
-    }
-
-    private double getAccuracy() {
-        return ((this.TP + this.FN) / (this.TP + this.TN + this.FP + this.FN));
-    }
-
-    private double getRecall() {
-        return (this.TP / (this.TP + this.FN));
-    }
-
-    private double getFMeasure() {
-        return 2 * ((getPrecision() * getRecall()) / (getPrecision() + getRecall()));
+        zero.showResults();
+        first.showResults();
+        second.showResults();
     }
 
     public void saveNeuralNetworkProperties() {
