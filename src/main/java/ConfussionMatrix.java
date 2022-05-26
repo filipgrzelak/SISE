@@ -35,10 +35,27 @@ public class ConfussionMatrix {
         boolean predictionCondition = prediction == this.hypothesis;
         boolean actualCondition = actual == this.hypothesis;
 
-        if (predictionCondition && actualCondition) this.TP++;
-        if (!predictionCondition && actualCondition) this.TN++;
-        if (predictionCondition && !actualCondition) this.FP++;
-        if (!predictionCondition && !actualCondition) this.FN++;
+//        if (predictionCondition) {
+//            if (actualCondition) this.TP++;
+//            else this.FP++;
+//        }
+//        else {
+//            if (actualCondition) this.TN++;
+//            else this.FN++;
+//        }
+
+        if (predictionCondition && actualCondition) {
+            this.TP++;
+        }
+        else if (!predictionCondition && actualCondition) {
+            this.TN++;
+        }
+        else if (!actualCondition && predictionCondition) {
+            this.FP++;
+        }
+        else {
+            this.FN++;
+        }
     }
 
     public void showResults() {
