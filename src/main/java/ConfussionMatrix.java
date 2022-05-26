@@ -17,7 +17,7 @@ public class ConfussionMatrix {
     }
 
     public double getAccuracy() {
-        return ((this.TP + this.FN) / (this.TP + this.TN + this.FP + this.FN));
+        return ((this.TP + this.TN) / (this.TP + this.TN + this.FP + this.FN));
     }
 
     public double getRecall() {
@@ -35,26 +35,17 @@ public class ConfussionMatrix {
         boolean predictionCondition = prediction == this.hypothesis;
         boolean actualCondition = actual == this.hypothesis;
 
-//        if (predictionCondition) {
-//            if (actualCondition) this.TP++;
-//            else this.FP++;
-//        }
-//        else {
-//            if (actualCondition) this.TN++;
-//            else this.FN++;
-//        }
-
         if (predictionCondition && actualCondition) {
             this.TP++;
         }
         else if (!predictionCondition && actualCondition) {
-            this.TN++;
+            this.FN++;
         }
         else if (!actualCondition && predictionCondition) {
             this.FP++;
         }
         else {
-            this.FN++;
+            this.TN++;
         }
     }
 
